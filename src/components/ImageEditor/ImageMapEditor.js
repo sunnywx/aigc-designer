@@ -4,73 +4,15 @@ import debounce from 'lodash/debounce';
 import React, { Component } from 'react';
 import {Canvas} from "react-design-editor";
 import CommonButton from '../../components/common/CommonButton';
-import { Content } from '../../components/layout';
+import Content from "./Content";
 import SandBox from '../../components/sandbox/SandBox';
-// import '../../styles/index.less';
-// import ImageMapConfigurations from './ImageMapConfigurations';
 import ImageMapFooterToolbar from './ImageMapFooterToolbar';
 import ImageMapHeaderToolbar from './ImageMapHeaderToolbar';
 import ImageMapItems from './ImageMapItems';
 import ImageMapPreview from './ImageMapPreview';
 import ImageMapTitle from './ImageMapTitle';
-
-const propertiesToInclude = [
-	'id',
-	'name',
-	'locked',
-	'file',
-	'src',
-	'link',
-	'tooltip',
-	'animation',
-	'layout',
-	'workareaWidth',
-	'workareaHeight',
-	'videoLoadType',
-	'autoplay',
-	'shadow',
-	'muted',
-	'loop',
-	'code',
-	'icon',
-	'userProperty',
-	'trigger',
-	'configuration',
-	'superType',
-	'points',
-	'svg',
-	'loadType',
-];
-
-const defaultOption = {
-	stroke: 'rgba(255, 255, 255, 0)',
-	strokeUniform: true,
-	resource: {},
-	link: {
-		enabled: false,
-		type: 'resource',
-		state: 'new',
-		dashboard: {},
-	},
-	tooltip: {
-		enabled: true,
-		type: 'resource',
-		template: '<div>{{message.name}}</div>',
-	},
-	animation: {
-		type: 'none',
-		loop: true,
-		autoplay: true,
-		duration: 1000,
-	},
-	userProperty: {},
-	trigger: {
-		enabled: false,
-		type: 'alarm',
-		script: 'return message.value > 0;',
-		effect: 'style',
-	},
-};
+import descriptors from './config/descriptors'
+import {defaultOption, propertiesToInclude} from "./config/options"
 
 class ImageMapEditor extends Component {
 	state = {
@@ -89,16 +31,14 @@ class ImageMapEditor extends Component {
 
 	componentDidMount() {
 		this.showLoading(true);
-		import('./Descriptors.json').then(descriptors => {
-			this.setState(
-				{
-					descriptors,
-				},
-				() => {
-					this.showLoading(false);
-				},
-			);
-		});
+		this.setState(
+			{
+				descriptors,
+			},
+			() => {
+				this.showLoading(false);
+			},
+		);
 		this.setState({
 			selectedItem: null,
 		});
@@ -654,7 +594,7 @@ class ImageMapEditor extends Component {
 			onSaveImage,
 		} = this.handlers;
 		const action = (
-			<React.Fragment>
+			<>
 				<CommonButton
 					className="rde-action-btn"
 					shape="circle"
@@ -698,30 +638,30 @@ class ImageMapEditor extends Component {
 					onClick={onSaveImage}
 					tooltipPlacement="bottomRight"
 				/>
-			</React.Fragment>
+			</>
 		);
-		const titleContent = (
-			<React.Fragment>
-				<span>{i18n.t('imagemap.imagemap-editor')}</span>
-			</React.Fragment>
-		);
-		const title = <ImageMapTitle title={titleContent} action={action} />;
+
+		const title = <ImageMapTitle title={<span>AIGC designer</span>} action={action} />;
 		const content = (
 			<div className="rde-editor">
-				<ImageMapItems
-					ref={c => {
-						this.itemsRef = c;
-					}}
-					canvasRef={this.canvasRef}
-					descriptors={descriptors}
-				/>
+				{this.canvasRef && (
+					<ImageMapItems
+						ref={c => {
+							this.itemsRef = c;
+						}}
+						canvasRef={this.canvasRef}
+						descriptors={descriptors}
+					/>
+				)}
 				<div className="rde-editor-canvas-container">
 					<div className="rde-editor-header-toolbar">
-						<ImageMapHeaderToolbar
-							canvasRef={this.canvasRef}
-							selectedItem={selectedItem}
-							onSelect={onSelect}
-						/>
+						{this.canvasRef && (
+							<ImageMapHeaderToolbar
+								canvasRef={this.canvasRef}
+								selectedItem={selectedItem}
+								onSelect={onSelect}
+							/>
+						)}
 					</div>
 					<div
 						ref={c => {
@@ -730,12 +670,13 @@ class ImageMapEditor extends Component {
 						className="rde-editor-canvas"
 					>
 						<Canvas
+							responsive
 							ref={c => {
 								this.canvasRef = c;
 							}}
 							className="rde-canvas"
 							minZoom={30}
-							maxZoom={500}
+							maxZoom={200}
 							objectOption={defaultOption}
 							propertiesToInclude={propertiesToInclude}
 							onModified={onModified}
@@ -756,25 +697,15 @@ class ImageMapEditor extends Component {
 						/>
 					</div>
 					<div className="rde-editor-footer-toolbar">
-						<ImageMapFooterToolbar
-							canvasRef={this.canvasRef}
-							preview={preview}
-							onChangePreview={onChangePreview}
-							zoomRatio={zoomRatio}
-						/>
+						{this.canvasRef && (
+							<ImageMapFooterToolbar
+								canvasRef={this.canvasRef}
+								preview={preview}
+								onChangePreview={onChangePreview}
+								zoomRatio={zoomRatio}
+							/>)}
 					</div>
 				</div>
-				{/*<ImageMapConfigurations*/}
-				{/*	canvasRef={this.canvasRef}*/}
-				{/*	onChange={onChange}*/}
-				{/*	selectedItem={selectedItem}*/}
-				{/*	onChangeAnimations={onChangeAnimations}*/}
-				{/*	onChangeStyles={onChangeStyles}*/}
-				{/*	onChangeDataSources={onChangeDataSources}*/}
-				{/*	animations={animations}*/}
-				{/*	styles={styles}*/}
-				{/*	dataSources={dataSources}*/}
-				{/*/>*/}
 				<ImageMapPreview
 					preview={preview}
 					onChangePreview={onChangePreview}

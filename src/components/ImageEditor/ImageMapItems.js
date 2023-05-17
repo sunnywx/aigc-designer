@@ -81,17 +81,17 @@ class ImageMapItems extends Component {
 	};
 
 	attachEventListener = canvas => {
-		canvas.canvas.wrapperEl.addEventListener('dragenter', this.events.onDragEnter, false);
-		canvas.canvas.wrapperEl.addEventListener('dragover', this.events.onDragOver, false);
-		canvas.canvas.wrapperEl.addEventListener('dragleave', this.events.onDragLeave, false);
-		canvas.canvas.wrapperEl.addEventListener('drop', this.events.onDrop, false);
+		canvas?.canvas?.wrapperEl.addEventListener('dragenter', this.events.onDragEnter, false);
+		canvas?.canvas?.wrapperEl.addEventListener('dragover', this.events.onDragOver, false);
+		canvas?.canvas?.wrapperEl.addEventListener('dragleave', this.events.onDragLeave, false);
+		canvas?.canvas?.wrapperEl.addEventListener('drop', this.events.onDrop, false);
 	};
 
 	detachEventListener = canvas => {
-		canvas.canvas.wrapperEl.removeEventListener('dragenter', this.events.onDragEnter);
-		canvas.canvas.wrapperEl.removeEventListener('dragover', this.events.onDragOver);
-		canvas.canvas.wrapperEl.removeEventListener('dragleave', this.events.onDragLeave);
-		canvas.canvas.wrapperEl.removeEventListener('drop', this.events.onDrop);
+		canvas?.canvas?.wrapperEl.removeEventListener('dragenter', this.events.onDragEnter);
+		canvas?.canvas?.wrapperEl.removeEventListener('dragover', this.events.onDragOver);
+		canvas?.canvas?.wrapperEl.removeEventListener('dragleave', this.events.onDragLeave);
+		canvas?.canvas?.wrapperEl.removeEventListener('drop', this.events.onDrop);
 	};
 
 	/* eslint-disable react/sort-comp, react/prop-types */

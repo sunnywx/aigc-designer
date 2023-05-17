@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Table, Modal, Input, Form } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Table, Modal, Input } from 'antd';
 import i18n from 'i18next';
 
 import Icon from '../icon/Icon';
