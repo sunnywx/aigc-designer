@@ -1,5 +1,3 @@
-// image editor
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 const ImageEditor=dynamic(()=>import("../components/ImageEditor/ImageMapEditor"), {ssr: false});
