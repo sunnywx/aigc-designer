@@ -5,11 +5,21 @@ import classnames from 'classnames';
 import i18n from 'i18next';
 
 import { Flex } from '../../components/flex';
-import Icon from '../../components/icon/Icon';
 import Scrollbar from '../../components/common/Scrollbar';
-import CommonButton from '../../components/common/CommonButton';
-import { SVGModal } from '../../components/common';
+import { IconButton, SVGModal } from '../../components/common';
 import { uuid } from 'uuidv4';
+import {
+  FaAngleDoubleLeft,
+  FaAngleDoubleRight,
+  FaGoogle,
+  FaStop,
+  FaCircle,
+  FaPlay,
+  FaMinus,
+  FaLongArrowAltRight,
+  FaFont,
+  FaImage
+} from "react-icons/fa";
 
 notification.config({
 	top: 80,
@@ -225,6 +235,29 @@ class ImageMapItems extends Component {
 		},
 	};
 
+  faIconPicker = (name) => {
+    switch (name) {
+      case "google":
+        return <FaGoogle />;
+      case "font":
+        return <FaFont />;
+      case "image":
+        return <FaImage />;
+      case "play":
+        return <FaPlay />;
+      case "stop":
+        return <FaStop />;
+      case "circle":
+        return <FaCircle />;
+      case "minus":
+        return <FaMinus />;
+      case "long-arrow-alt-right":
+        return <FaLongArrowAltRight />;
+      default:
+        break;
+    }
+  }
+
 	renderItems = items => (
 		<Flex flexWrap="wrap" flexDirection="column" style={{ width: '100%' }}>
 			{items.map(item => this.renderItem(item))}
@@ -241,7 +274,7 @@ class ImageMapItems extends Component {
 				style={{ justifyContent: this.state.collapse ? 'center' : null }}
 			>
 				<span className="rde-editor-items-item-icon">
-					<Icon name={item.icon.name} prefix={item.icon.prefix} style={item.icon.style} />
+          {this.faIconPicker(item.icon.name)}
 				</span>
 				{this.state.collapse ? null : <div className="rde-editor-items-item-text">{item.name}</div>}
 			</div>
@@ -256,7 +289,7 @@ class ImageMapItems extends Component {
 				style={{ justifyContent: this.state.collapse ? 'center' : null }}
 			>
 				<span className="rde-editor-items-item-icon">
-					<Icon name={item.icon.name} prefix={item.icon.prefix} style={item.icon.style} />
+          {this.faIconPicker(item.icon.name)}
 				</span>
 				{this.state.collapse ? null : <div className="rde-editor-items-item-text">{item.name}</div>}
 			</div>
@@ -264,6 +297,7 @@ class ImageMapItems extends Component {
 
 	render() {
 		const { descriptors } = this.props;
+    console.log("ImageMapItems.js ~ line 291: descriptors", descriptors);
 		const { collapse, textSearch, filteredDescriptors, activeKey, svgModalVisible, svgOption } = this.state;
 		const className = classnames('rde-editor-items', {
 			minimize: collapse,
@@ -272,16 +306,15 @@ class ImageMapItems extends Component {
 			<div className={className}>
 				<Flex flex="1" flexDirection="column" style={{ height: '100%' }}>
 					<Flex justifyContent="center" alignItems="center" style={{ height: 40 }}>
-						<CommonButton
-							icon={collapse ? 'angle-double-right' : 'angle-double-left'}
-							shape="circle"
-							className="rde-action-btn"
-							style={{ margin: '0 4px' }}
-							onClick={this.handlers.onCollapse}
-						/>
+            <IconButton
+              onClick={this.handlers.onCollapse}
+              className="rde-action-btn"
+              size={collapse ? "40px" : "40px"}
+              icon={collapse ? <FaAngleDoubleRight /> : <FaAngleDoubleLeft />}
+            />
 						{collapse ? null : (
 							<Input
-								style={{ margin: '8px' }}
+								style={{ marginBlock: '8px', marginRight: '8px' }}
 								placeholder={i18n.t('action.search-list')}
 								onChange={this.handlers.onSearchNode}
 								value={textSearch}
