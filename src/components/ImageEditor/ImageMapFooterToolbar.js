@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { Button, Switch, Tooltip } from 'antd';
 import i18n from 'i18next';
 
-import CommonButton from '../../components/common/CommonButton';
 import * as code from '../../constants/code';
+import { FaMousePointer, FaHandRock, FaSearchMinus, FaExpand, FaSearchPlus } from "react-icons/fa";
+import { IconButton } from '../common';
 
 class ImageMapFooterToolbar extends Component {
 	static propTypes = {
@@ -92,58 +93,60 @@ class ImageMapFooterToolbar extends Component {
 			<React.Fragment>
 				<div className="rde-editor-footer-toolbar-interaction">
 					<Button.Group>
-						<CommonButton
+						<IconButton
 							type={interactionMode === 'selection' ? 'primary' : 'default'}
 							style={{ borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px' }}
+							className="rde-action-btn"
+							icon={ <FaMousePointer /> }
 							onClick={() => {
 								selection();
 							}}
-							icon="mouse-pointer"
-							tooltipTitle={i18n.t('action.selection')}
+							tooltipTitle="Selection"
 						/>
-						<CommonButton
+						<IconButton
 							type={interactionMode === 'grab' ? 'primary' : 'default'}
+							className="rde-action-btn"
 							style={{ borderBottomRightRadius: '8px', borderTopRightRadius: '8px' }}
+							icon={ <FaHandRock /> }
 							onClick={() => {
 								grab();
 							}}
-							tooltipTitle={i18n.t('action.grab')}
-							icon="hand-rock"
+							tooltipTitle="Grab"
 						/>
 					</Button.Group>
 				</div>
 				<div className="rde-editor-footer-toolbar-zoom">
 					<Button.Group>
-						<CommonButton
+						<IconButton
 							style={{ borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px' }}
 							onClick={() => {
 								canvasRef.handler.zoomHandler.zoomOut();
 							}}
-							icon="search-minus"
-							tooltipTitle={i18n.t('action.zoom-out')}
+							icon={<FaSearchMinus />}
+							tooltipTitle="Zoom out"
 						/>
-						<CommonButton
+						<IconButton
 							onClick={() => {
 								canvasRef.handler.zoomHandler.zoomOneToOne();
 							}}
-							tooltipTitle={i18n.t('action.one-to-one')}
+							tooltipTitle="One to one"
 						>
 							{`${zoomValue}%`}
-						</CommonButton>
-						<CommonButton
+						</IconButton>
+						<IconButton
 							onClick={() => {
 								canvasRef.handler.zoomHandler.zoomToFit();
 							}}
-							tooltipTitle={i18n.t('action.fit')}
-							icon="expand"
+							tooltipTitle="Fit screen"
+							icon={<FaExpand />}
 						/>
-						<CommonButton
+						<IconButton
 							style={{ borderBottomRightRadius: '8px', borderTopRightRadius: '8px' }}
 							onClick={() => {
 								canvasRef.handler.zoomHandler.zoomIn();
 							}}
-							icon="search-plus"
-							tooltipTitle={i18n.t('action.zoom-in')}
+							icon={<FaSearchPlus />}
+							tooltipTitle="Zoom in"
 						/>
 					</Button.Group>
 				</div>

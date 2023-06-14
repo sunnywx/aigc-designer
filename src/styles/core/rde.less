@@ -159,6 +159,8 @@ video {
 .rde-action-btn {
 	background: transparent;
 	border: transparent;
+	display: grid;
+	place-items: center;
 	button {
 		background: transparent !important;
 		border-color: transparent !important;
@@ -171,6 +173,40 @@ video {
 	&:focus {
 		background: transparent;
 		border: transparent;
+	}
+}
+
+.icon-button {
+	border: none;
+	display: grid;
+	place-content: center;
+	aspect-ratio: 1;
+	cursor: pointer;
+	border-radius: 50% !important;
+	background: transparent !important;
+}
+
+.disabled {
+	button{
+		display: grid;
+		place-items: center;
+		height: 100%;
+		color: #acadb0;
+		pointer-events: none;
+		aspect-ratio: 1;
+		border: none;
+		&:hover {
+			background-color: transparent;
+		}
+	}
+}
+
+.rde-editor-footer-toolbar-zoom{
+	width: max-content;
+	padding-inline: 20px;
+	.ant-btn-group{
+		display: flex;
+		column-gap: 10px;
 	}
 }
 

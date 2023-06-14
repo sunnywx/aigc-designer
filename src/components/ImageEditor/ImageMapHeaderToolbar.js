@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import i18n from 'i18next';
 
 import { Flex } from '../../components/flex';
 import ImageMapList from './ImageMapList';
-import { CommonButton } from '../../components/common';
-import Icon from '../../components/icon/Icon';
+import { IconButton } from '../../components/common';
+import {
+	FaLayerGroup,
+	FaAngleUp,
+	FaAngleDown,
+	FaAngleDoubleUp,
+	FaAngleDoubleDown,
+	FaAlignLeft,
+	FaAlignCenter,
+	FaAlignRight,
+	FaObjectGroup,
+	FaObjectUngroup,
+	FaCrop,
+	FaCheck,
+	FaTimes,
+	FaImage,
+	FaClone,
+	FaTrash,
+	FaUndoAlt,
+	FaRedoAlt
+} from 'react-icons/fa';
+
 
 class ImageMapHeaderToolbar extends Component {
 	static propTypes = {
@@ -19,163 +38,145 @@ class ImageMapHeaderToolbar extends Component {
 		return (
 			<Flex className="rde-editor-header-toolbar-container" flex="1">
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-list">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
-						icon="layer-group"
-						tooltipTitle={i18n.t('action.canvas-list')}
+						icon={ <FaLayerGroup /> }
+						tooltipTitle="Canvas list"
 					/>
 					<div className="rde-canvas-list">
 						<ImageMapList canvasRef={canvasRef} selectedItem={selectedItem} />
 					</div>
 				</Flex.Item>
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-alignment">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.bringForward()}
-						icon="angle-up"
-						tooltipTitle={i18n.t('action.bring-forward')}
+						icon={ <FaAngleUp /> }
+						tooltipTitle="Bring forward"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.sendBackwards()}
-						icon="angle-down"
-						tooltipTitle={i18n.t('action.send-backwards')}
+						icon={ <FaAngleDown /> }
+						tooltipTitle="Send backwards"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.bringToFront()}
-						icon="angle-double-up"
-						tooltipTitle={i18n.t('action.bring-to-front')}
+						icon={ <FaAngleDoubleUp /> }
+						tooltipTitle="Bring to front"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.sendToBack()}
-						icon="angle-double-down"
-						tooltipTitle={i18n.t('action.send-to-back')}
+						icon={ <FaAngleDoubleDown /> }
+						tooltipTitle="Bring to front"
 					/>
 				</Flex.Item>
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-alignment">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.alignmentHandler.left()}
-						icon="align-left"
-						tooltipTitle={i18n.t('action.align-left')}
+						icon={ <FaAlignLeft /> }
+						tooltipTitle="Align left"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.alignmentHandler.center()}
-						icon="align-center"
-						tooltipTitle={i18n.t('action.align-center')}
+						icon={ <FaAlignCenter /> }
+						tooltipTitle="Align center"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.alignmentHandler.right()}
-						icon="align-right"
-						tooltipTitle={i18n.t('action.align-right')}
+						icon={ <FaAlignRight /> }
+						tooltipTitle="Align right"
 					/>
 				</Flex.Item>
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-group">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.toGroup()}
-						icon="object-group"
-						tooltipTitle={i18n.t('action.object-group')}
+						icon={ <FaObjectGroup /> }
+						tooltipTitle="Object group"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.toActiveSelection()}
-						icon="object-ungroup"
-						tooltipTitle={i18n.t('action.object-ungroup')}
+						icon={ <FaObjectUngroup /> }
+						tooltipTitle="Object ungroup"
 					/>
 				</Flex.Item>
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-crop">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={canvasRef ? !canvasRef.handler?.cropHandler.validType() : true}
 						onClick={() => canvasRef.handler?.cropHandler.start()}
-						icon="crop"
-						tooltipTitle={i18n.t('action.crop')}
+						icon={ <FaCrop /> }
+						tooltipTitle="Crop"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={canvasRef ? !canvasRef.handler?.cropHandler.cropRect : true}
 						onClick={() => canvasRef.handler?.cropHandler.finish()}
-						icon="check"
-						tooltipTitle={i18n.t('action.crop-save')}
+						icon={ <FaCheck /> }
+						tooltipTitle="Crop save"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={canvasRef ? !canvasRef.handler?.cropHandler.cropRect : true}
 						onClick={() => canvasRef.handler?.cropHandler.cancel()}
-						icon="times"
-						tooltipTitle={i18n.t('action.crop-cancel')}
+						icon={ <FaTimes /> }
+						tooltipTitle="Crop cancel"
 					/>
 				</Flex.Item>
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-operation">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.saveImage()}
-						icon="image"
-						tooltipTitle={i18n.t('action.image-save')}
+						icon={ <FaImage /> }
+						tooltipTitle="Save"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.duplicate()}
-						icon="clone"
-						tooltipTitle={i18n.t('action.clone')}
+						icon={ <FaClone /> }
+						tooltipTitle="Clone"
 					/>
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
 						disabled={isCropping}
 						onClick={() => canvasRef.handler?.remove()}
-						icon="trash"
-						tooltipTitle={i18n.t('action.delete')}
+						icon={ <FaTrash /> }
+						tooltipTitle="Delete"
 					/>
 				</Flex.Item>
 				<Flex.Item className="rde-canvas-toolbar rde-canvas-toolbar-history">
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
 						disabled={isCropping || (canvasRef && !canvasRef.handler?.transactionHandler.undos.length)}
 						onClick={() => canvasRef.handler?.transactionHandler.undo()}
-					>
-						<Icon name="undo-alt" style={{ marginRight: 8 }} />
-						Undo
-					</CommonButton>
-					<CommonButton
+						icon={ <FaUndoAlt /> }
+						tooltipTitle="Undo"
+					/>
+					<IconButton
 						className="rde-action-btn"
 						disabled={isCropping || (canvasRef && !canvasRef.handler?.transactionHandler.redos.length)}
 						onClick={() => canvasRef.handler?.transactionHandler.redo()}
-					>
-						Redo
-						<Icon name="redo-alt" style={{ marginLeft: 8 }} />
-					</CommonButton>
+						icon={ <FaRedoAlt /> }
+						tooltipTitle="Redo"
+					/>
 				</Flex.Item>
 			</Flex>
 		);

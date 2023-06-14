@@ -3,7 +3,6 @@ import i18n from 'i18next';
 import debounce from 'lodash/debounce';
 import React, { Component } from 'react';
 import {Canvas} from "react-design-editor";
-import CommonButton from '../../components/common/CommonButton';
 import Content from "./Content";
 import SandBox from '../../components/sandbox/SandBox';
 import ImageMapFooterToolbar from './ImageMapFooterToolbar';
@@ -13,7 +12,8 @@ import ImageMapPreview from './ImageMapPreview';
 import ImageMapTitle from './ImageMapTitle';
 import descriptors from './config/descriptors'
 import {defaultOption, propertiesToInclude} from "./config/options"
-
+import { FaFileDownload, FaFileUpload, FaImage } from "react-icons/fa";
+import { IconButton } from '../common';
 class ImageMapEditor extends Component {
 	state = {
 		selectedItem: null,
@@ -595,13 +595,12 @@ class ImageMapEditor extends Component {
 		} = this.handlers;
 		const action = (
 			<>
-				<CommonButton
+				<IconButton
 					className="rde-action-btn"
-					shape="circle"
-					icon="file-download"
 					disabled={!editing}
-					tooltipTitle={i18n.t('action.download')}
 					onClick={onDownload}
+					icon={ <FaFileDownload /> }
+					tooltipTitle="Download"
 					tooltipPlacement="bottomRight"
 				/>
 				{editing ? (
@@ -612,30 +611,27 @@ class ImageMapEditor extends Component {
 						onConfirm={onUpload}
 						placement="bottomRight"
 					>
-						<CommonButton
+						<IconButton
 							className="rde-action-btn"
-							shape="circle"
-							icon="file-upload"
-							tooltipTitle={i18n.t('action.upload')}
+							icon={ <FaFileUpload /> }
+							tooltipTitle="Upload"
 							tooltipPlacement="bottomRight"
 						/>
 					</Popconfirm>
 				) : (
-					<CommonButton
+					<IconButton
 						className="rde-action-btn"
-						shape="circle"
-						icon="file-upload"
-						tooltipTitle={i18n.t('action.upload')}
-						tooltipPlacement="bottomRight"
 						onClick={onUpload}
+						icon={ <FaFileUpload /> }
+						tooltipTitle="Upload"
+						tooltipPlacement="bottomRight"
 					/>
 				)}
-				<CommonButton
+				<IconButton
 					className="rde-action-btn"
-					shape="circle"
-					icon="image"
-					tooltipTitle={i18n.t('action.image-save')}
 					onClick={onSaveImage}
+					icon={ <FaImage /> }
+					tooltipTitle="Image save"
 					tooltipPlacement="bottomRight"
 				/>
 			</>
