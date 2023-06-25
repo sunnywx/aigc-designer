@@ -88,7 +88,7 @@ export default function SideNav(props: Props) {
   }
   
   return (
-    <div ref={panelRef}>
+    <div ref={panelRef} style={{ "position": 'relative'}}>
       <div className={styles.panel}>
         {categories.map((gp) => {
           return (

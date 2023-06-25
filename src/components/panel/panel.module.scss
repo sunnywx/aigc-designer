@@ -1,12 +1,9 @@
-$fromTop: 68px;
-
 .panel {
   position: absolute;
   left: 0;
-  top: $fromTop;
+  top: 0;
   background-color: white;
   box-shadow: inset -1px 0px 0px #E2E8F0;
-  height: calc(100% - $fromTop) !important;
   border: 1px solid var(--gray-100);
   border-right: none;
   transition: all .5s ease-in-out;
