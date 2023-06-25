@@ -1,10 +1,28 @@
-import dynamic from "next/dynamic";
+import Editor from '@/editor'
+import Topbar from '@/components/topbar'
+import SideNav from '@/components/side-nav'
+import RightPanel from '@/components/props-panel'
 
-const ImageEditor=dynamic(
-  ()=>import("../legacy-editor/ImageEditor/ImageMapEditor"), {ssr: false});
+import styles from './editor.module.scss'
 
-export default function Editor() {
+export default function EditorPage() {
   return (
-    <ImageEditor />
-  );
+    <Editor
+      mainClassName={styles.main}
+      canvasClassName={styles.canvas}
+      renderTopbar={canvas => (
+        <Topbar canvas={canvas}/>
+      )}
+      renderLeftPanel={canvas => {
+        return (
+          <SideNav canvas={canvas} />
+        )
+      }}
+      renderRightPanel={canvas => {
+        return (
+          <RightPanel canvas={canvas} />
+        )
+      }}
+    />
+  )
 }
