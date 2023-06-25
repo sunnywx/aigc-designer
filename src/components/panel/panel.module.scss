@@ -1,0 +1,53 @@
+$fromTop: 68px;
+
+.panel {
+  position: absolute;
+  left: 0;
+  top: $fromTop;
+  background-color: white;
+  box-shadow: inset -1px 0px 0px #E2E8F0;
+  height: calc(100% - $fromTop) !important;
+  border: 1px solid var(--gray-100);
+  border-right: none;
+  transition: all .5s ease-in-out;
+  padding: 8px 16px;
+  overflow: auto;
+  z-index: 10;
+  border-radius: 8px;
+
+  &.closed {
+    transform: translateX(-999px) !important;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+
+    & > .title {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 20px;
+      color: #475569;
+    }
+
+    .actions {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+
+      & > .pinned {
+        :global{
+          svg {
+            transform: rotate(45deg);
+          }
+        }
+      }
+    }
+  }
+
+  .body {
+
+  }
+}

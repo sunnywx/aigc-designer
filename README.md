@@ -1,6 +1,8 @@
 AIGC designer
 ==
 
+> AI powered low-code page designer(brand, postcard, etc)
+
 ## Develop
 
 ```bash

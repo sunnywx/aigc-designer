@@ -1,0 +1,17 @@
+.wrap{
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  align-items: center;
+
+  .main {
+    width: 100vw;
+    margin: 20px;
+
+    canvas {
+      transition: all .5s ease;
+    }
+  }
+}

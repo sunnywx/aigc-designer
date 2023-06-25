@@ -1,0 +1,9 @@
+.main {
+  display: flex;
+  justify-content: space-between;
+}
+
+.canvas {
+  overflow: auto;
+  border: 1px solid #ccc;
+}
