@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
     // todo
-    const { p, size = '256', count = '1', seed = 0, style } = req.body;
+    const { p, size = 512, count = 1, seed = 0, style } = req.body;
     const body = {
       text_prompts: [
         {
@@ -38,8 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         Authorization: `Bearer ${apiKey}`,
       }
     }) as any;
-    console.log(`res ${JSON.stringify(response)}`)
-    res.status(200).json(response.artifacts)
+    //response {result:[{base64: string,seed: number ,finishReason: string},...]}
+    res.status(200).json({result: response.data.artifacts})
+  } else {
+    res.status(400).end("Bad request")
   }
-  res.status(400).end("Bad request")
 }
