@@ -15,6 +15,9 @@ interface Result {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Result>) {
+  if(req.method?.toLowerCase() !== 'get'){
+    return res.status(400).end('Bad request')
+  }
   const result = properties.map(item => {
     const urls = item.images;
     const property = {
