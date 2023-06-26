@@ -1,17 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 // you can update it
-interface Property {
+interface Photo {
   id: string;
   name: string;
-  thumbnail: string;
-  images: string[]
+  url: string;
+  listingPicturesUrl: string;
 }
 
 interface Result {
-  properties: Property[]
+  photos: Photo[]
 }
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Result>) {
-  // get properties
+  // get photos
 }
