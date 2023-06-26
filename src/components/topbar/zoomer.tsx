@@ -3,6 +3,7 @@ import styles from './index.module.scss'
 import { BiMinusCircle, BiPlusCircle } from 'react-icons/bi'
 import { Tooltip, IconButton } from '@mui/material'
 import { useEffect, useMemo, useState } from "react";
+import ActionButton from '@/components/action-button'
 
 interface Props {
 
@@ -24,7 +25,8 @@ export default function Zoomer(props: Props) {
     setZoomLevel(canvas?.canvas?.getZoom() as number)
   }
   const onZoomFit = () => {
-    // todo
+    canvas?.zoomFit()
+    setZoomLevel(canvas?.canvas?.getZoom() as number)
   }
   
   useEffect(()=> {
@@ -33,19 +35,11 @@ export default function Zoomer(props: Props) {
   
   return (
     <div className={styles.zoomer}>
-      <Tooltip title='Zoom in'>
-        <IconButton onClick={onZoomIn}>
-          <BiPlusCircle size={24}/>
-        </IconButton>
-      </Tooltip>
-      <Tooltip title='reset zoom'>
+      <ActionButton title='Zoom in' icon={<BiPlusCircle size={24}/>} onClick={onZoomIn}/>
+      <ActionButton title='Reset zoom'>
         <div className={styles.reset} onClick={onZoomFit}>{zoomLabel}</div>
-      </Tooltip>
-      <Tooltip title='Zoom out'>
-        <IconButton onClick={onZoomOut}>
-          <BiMinusCircle size={24}/>
-        </IconButton>
-      </Tooltip>
+      </ActionButton>
+      <ActionButton title='Zoom out' icon={<BiMinusCircle size={24}/>} onClick={onZoomOut} />
     </div>
   );
 }

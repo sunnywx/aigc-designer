@@ -64,18 +64,15 @@ export default class Canvas {
     const canvas=this.canvas
     const {minZoom, maxZoom}=this.options
     
-    canvas.on('selection:cleared', function() {
-      // canvas.setSelectedObject([])
-      console.log('clear selection')
-    })
-    canvas.on('selection:created', function(e: any) {
-      // setSelectedObject(e.selected)
-      console.log('created selection')
-    })
-    canvas.on('selection:updated', function (e: any) {
-      // setSelectedObject(e.selected)
-      console.log('update selection')
-    })
+    // canvas.on('selection:cleared', function() {
+    //   console.log('clear selection')
+    // })
+    // canvas.on('selection:created', function(e: any) {
+    //   console.log('created selection')
+    // })
+    // canvas.on('selection:updated', function (e: any) {
+    //   console.log('update selection')
+    // })
   
     // zoom and panning
     // see: http://fabricjs.com/fabric-intro-part-5#pan_zoom
@@ -107,16 +104,19 @@ export default class Canvas {
     })
     canvas.on('mouse:wheel', function (opt){
       const delta = opt.e.deltaY;
-      const {offsetX, offsetY}=opt.e
+      // const {offsetX, offsetY}=opt.e  // mouse point's offset
+      const vpCenter=canvas.getVpCenter() // viewpoint's center
       let zoom = canvas.getZoom();
       zoom *= 0.99 ** delta;
       if (zoom > maxZoom) zoom = maxZoom as number;
       if (zoom < minZoom) zoom = minZoom as number;
       // make wheel-zoom to center canvas around the point where cursor is
-      canvas.zoomToPoint({x: offsetX, y: offsetY}, zoom)
+      // canvas.zoomToPoint({x: offsetX, y: offsetY}, zoom)
+      
+      // always based on vp center to zoom
+      canvas.zoomToPoint(vpCenter, zoom)
       opt.e.preventDefault();
       opt.e.stopPropagation();
-      // console.log("cur zoom, vpTransform, canWid, canHei: ", zoom, this.viewportTransform, canvas.getWidth(), canvas.getHeight())
     })
   }
 
@@ -137,6 +137,8 @@ export default class Canvas {
       if(img.width > 256){
         img.scale(0.5)
       }
+      this.canvas.centerObject(img)
+      this.canvas.setActiveObject(img)
       this.canvas.add(img)
     })
   }
@@ -222,19 +224,23 @@ export default class Canvas {
     const {maxZoom, zoomStep}=this.options
     const zoom = this.canvas.getZoom()
     const toScale=zoom + zoomStep > maxZoom ? maxZoom : zoom + zoomStep
-    this.canvas.zoomToPoint({
-      x: this.canvas.getWidth() / 2,
-      y: this.canvas.getHeight() / 2
-    }, toScale as number)
+    // const center=this.canvas.getCenterPoint()
+    // const vpCenter=this.canvas.getVpCenter()
+    // console.log('center, vp-center, zoom: ', center, vpCenter, this.canvas.getZoom())
+    // console.log('vpCoords, vpt: ', this.canvas.vptCoords, this.canvas.viewportTransform)
+    this.canvas.zoomToPoint(this.canvas.getVpCenter(), toScale as number)
   }
   
   zoomOut() {
     const {minZoom, zoomStep}=this.options
     const zoom = this.canvas.getZoom()
     const toScale = zoom - zoomStep < minZoom ? minZoom : zoom - zoomStep
-    this.canvas.zoomToPoint({
-      x: this.canvas.getWidth() / 2,
-      y: this.canvas.getHeight() / 2
-    }, toScale as number)
+    this.canvas.zoomToPoint(this.canvas.getVpCenter(), toScale as number)
+  }
+  
+  zoomFit(){
+    // reset initial vp transform matrix
+    // see: http://fabricjs.com/docs/fabric.StaticCanvas.html#viewportTransform
+    this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0])
   }
 }
