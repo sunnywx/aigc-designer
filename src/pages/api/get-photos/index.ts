@@ -12,9 +12,7 @@ interface Result {
   photos: Photo[]
 }
 
-//const pics:Photo[] = 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Result>) {
   // get photos
-  res.status(200).json();
 }
