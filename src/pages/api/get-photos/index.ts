@@ -22,6 +22,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
     return photo;
   })
-  // get properties
   res.status(200).json({ photos: result });
 }
