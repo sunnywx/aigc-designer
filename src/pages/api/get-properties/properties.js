@@ -1,4 +1,4 @@
-const photos = [
+const properties = [
     {
         id: '1118627867',
         thumbnail: 'https://cdn.chime.me/image/fs/mls-listing/202362/14/original_b1c212cd-7722-4291-9a02-e95ee0f47b25.png',
@@ -73,4 +73,4 @@ const photos = [
     }
 ];
 
-export default photos
+export default properties
