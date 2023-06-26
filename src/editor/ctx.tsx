@@ -7,15 +7,17 @@ export type EditorContextType = {
   setCanvas: Dispatch<SetStateAction<Canvas>> | (() => void)
   panelOpen?: boolean
   setPanelOpen?: Dispatch<SetStateAction<boolean>> | (() => void)
+  zoomLevel?: number
+  setZoomLevel?: Dispatch<SetStateAction<number>>
 }
 
 export const EditorContext = createContext<EditorContextType>({
   canvas: null,
-  setCanvas: () => {
-  },
+  setCanvas: () => {},
   panelOpen: false,
-  setPanelOpen: () => {
-  }
+  setPanelOpen: () => {},
+  zoomLevel: 1,
+  setZoomLevel: () => {}
 });
 
 export function useEditor() {

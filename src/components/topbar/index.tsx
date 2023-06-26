@@ -50,7 +50,7 @@ export default function Topbar({ canvas }: Props) {
           </Grid>
           <Grid item md={4}>
             <Grid container alignItems="center" justifyContent="flex-end" gap="10px" className={styles.btns}>
-              <ActionButton icon={<AiOutlineFileAdd />} tips='New design' onClick={()=> setNewFileOpen(true)}/>
+              {/*<ActionButton icon={<AiOutlineFileAdd />} tips='New design' onClick={()=> setNewFileOpen(true)}/>*/}
               <ActionButton icon={'AI'} tips='AI generative image' onClick={()=> setAiOpen(true)}/>
               <ActionButton icon={<FaCode />} tips='View schema' onClick={()=> setSchemaOpen(true)}/>
               <ActionButton icon={<GrView />} tips='Preview' onClick={()=> setPreviewOpen(true)}/>
