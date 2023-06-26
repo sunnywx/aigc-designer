@@ -38,14 +38,14 @@ export default class Canvas {
     }
     this.ctx = this.el.getContext('2d')
     this.options=_.defaults(this.options, options, {
-      width: 800,
-      height: 600,
+      width: 600,
+      height: 650,
       backgroundColor: '#f5f5f5',
       fillColor: 'rgba(255, 255, 255, 0.0)',
       strokeColor: '#000',
       zoomStep: 0.2,
-      minZoom: 0.3,
-      maxZoom: 3
+      minZoom: 0.2,
+      maxZoom: 2.6
     } as Partial<CanvasOptions>)
     
     this.canvas=new fabric.Canvas(this.el,
@@ -132,8 +132,11 @@ export default class Canvas {
 
   addImage(url: string) {
     fabric.Image.fromURL(url, img=> {
+      // console.log('load img: ', img)
       // transform img
-      img.scale(0.5)
+      if(img.width > 256){
+        img.scale(0.5)
+      }
       this.canvas.add(img)
     })
   }

@@ -41,8 +41,8 @@ export default function Editor({
   
   useEffect(() => {
     const canvas=new Canvas(canvasEl.current!, {
-      width: 600,
-      height: 800
+      // width: 600,
+      // height: 800
     })
     setCanvas(canvas);
     

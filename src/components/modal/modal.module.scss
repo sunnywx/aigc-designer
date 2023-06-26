@@ -1,0 +1,15 @@
+.modal {
+  :global{
+    .MuiDialogContent-root {
+      min-width: 500px;
+    }
+    .MuiPaper-root {
+      max-width: max-content;
+    }
+  }
+
+  .body {
+    max-height: 600px;
+    overflow: auto;
+  }
+}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import cs from 'classnames'
 import {Canvas, useEditor} from '@/editor'
 import Panel from '@/components/panel'
 import Category from './category'
@@ -88,8 +89,11 @@ export default function SideNav(props: Props) {
   }
   
   return (
-    <div ref={panelRef} style={{ "position": 'relative'}}>
-      <div className={styles.panel}>
+    <div ref={panelRef} style={{
+      position: 'relative',
+      height: 'max-content'
+    }}>
+      <div className={styles.nav}>
         {categories.map((gp) => {
           return (
             <Category
@@ -107,8 +111,8 @@ export default function SideNav(props: Props) {
       <Panel
         title={categories.find(v => v.type === active)?.name || ''}
         style={{ transform: 'translateX(90px)' }}
-        height='692px'
-        className='source-panel'
+        width='280px'
+        className={cs('source-panel', styles.panel)}
         onClose={() => setPanelOpen?.(false)}
         onPin={()=> setPin(v=> !v)}
         visible={!!panelOpen}

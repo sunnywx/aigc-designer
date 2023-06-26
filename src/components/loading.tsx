@@ -7,9 +7,9 @@ export default function Loading() {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "100vw",
-      height: "100vh",
-      zIndex: 100
+      width: "100%",
+      height: "100%",
+      zIndex: 1000
     }}>
       <CircularProgress />
     </Box>

@@ -1,5 +1,5 @@
 .panel {
-  position: absolute;
+  position: relative;
   left: 0;
   top: 0;
   background-color: white;
@@ -11,6 +11,8 @@
   overflow: auto;
   z-index: 10;
   border-radius: 8px;
+  min-width: 200px;
+  height: auto;
 
   &.closed {
     transform: translateX(-999px) !important;

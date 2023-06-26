@@ -2,6 +2,8 @@ import {Canvas} from '@/editor'
 import styles from './style.module.scss'
 import { Button } from "@mui/material";
 import { useState } from "react";
+import ColorPicker from '@/components/color-picker'
+import Panel from '@/components/panel'
 
 interface Props {
   canvas: Canvas
@@ -25,19 +27,14 @@ export default function PropsPanel({canvas}: Props) {
     canvas?.deleteSelected()
   }
   
-  const onZoomIn = () => {
-    canvas?.zoomIn()
-  }
-  const onZoomOut = () => {
-    canvas?.zoomOut()
-  }
-  const onZoomFit = () => {
-  
-  }
-  
   return (
-    <div className={styles.panel}>
-      <h3>props panel</h3>
+    <Panel
+      title='Setting panel'
+      className={styles.panel}
+      pinned={false}
+      closable={false}
+      visible
+    >
       <div>
         <input
           type='text'
@@ -58,12 +55,8 @@ export default function PropsPanel({canvas}: Props) {
         <Button variant="outlined" size="small" onClick={onDeleteSelected}>Delete Selected</Button>
       </div>
       
-      <div>
-        <Button variant="outlined" size="small" onClick={onZoomIn}>Zoom In</Button>
-        <Button variant="outlined" size="small" onClick={onZoomOut}>Zoom Out</Button>
-        <Button variant="outlined" size="small" onClick={onZoomFit}>Zoom Fit</Button>
-      </div>
+      <ColorPicker onPick={color=> console.log('pick color: ', color)}/>
 
-    </div>
+    </Panel>
   );
 }

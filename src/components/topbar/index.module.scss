@@ -1,14 +1,34 @@
+$svgStroke: #666;
+$svgFill: #ccc;
+
 .wrap {
-  background: #faf7f7;
-  color: #333;
-
-  .zoomer{
-
-  }
+  //background: #faf7f7;
+  //color: #333;
 
   .btns {
     &> button {
       text-transform: none;
     }
+
+    //svg{
+    //  //fill: $svgFill;
+    //  stroke: $svgStroke;
+    //  path {
+    //    //fill: $svgFill;
+    //    stroke: $svgStroke;
+    //  }
+    //}
+  }
+}
+
+.zoomer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .reset {
+    width: 2.5rem;
+    cursor: pointer;
+    text-align: center;
   }
 }

@@ -21,9 +21,9 @@ interface Props {
 }
 
 export default function Panel({
-  width = '280px',
-  height = '100%',
-  title = '',
+  width,
+  height='100%',
+  title,
   pinnable,
   closable,
   visible,
