@@ -2,4 +2,25 @@
   width: 240px;
   height: 437px;
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  .panelContent {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    > * {
+      width: 100%;
+    }
+    input {
+      padding-inline: 10px;
+      border-radius: 4px;
+      height: 30px;
+      outline: none;
+      border: 1px solid var(--blue-300);
+      &:hover, &:active, &:focus {
+        border: 2px solid var(--blue-500);
+      }
+    }
+  }
 }

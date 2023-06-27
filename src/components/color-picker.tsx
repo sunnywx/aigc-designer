@@ -32,7 +32,8 @@ export default function ColorPicker({ title = 'Pick color', className, onPick }:
   return (
     <div className={cs(classes.wrap, className)} ref={wrapRef}>
       <Button
-        variant='outlined'
+        fullWidth
+        variant='contained'
         size='small'
         onClick={() => setVisible(prev => !prev)}
       >
@@ -54,6 +55,6 @@ export default function ColorPicker({ title = 'Pick color', className, onPick }:
 
 const useStyles = makeStyles(theme => ({
   wrap: {
-    position: 'absolute'
+    // position: 'absolute',
   }
 }))

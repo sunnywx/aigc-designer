@@ -16,10 +16,10 @@ export default function ShapePanel() {
   }
   
   return (
-    <div className={styles.wrap}>
-      <Button variant="outlined" size="small" onClick={onAddCircle}>Add circle</Button>
-      <Button variant="outlined" size="small" onClick={onAddRectangle}>Add Rectangle</Button>
-      <Button variant="outlined" size="small" onClick={onAddLine}>Add Line</Button>
-    </div>
+    <>
+      <Button variant="contained" size="small" onClick={onAddCircle}>Add circle</Button>
+      <Button variant="contained" size="small" onClick={onAddRectangle}>Add Rectangle</Button>
+      <Button variant="contained" size="small" onClick={onAddLine}>Add Line</Button>
+    </>
   );
 }
