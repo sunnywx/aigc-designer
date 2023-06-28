@@ -29,7 +29,7 @@ export default function Modal({
   title,
   children,
   footer,
-  width,
+  width=650,
   fullScreen=false,
   fullWidth=false
 }: Props) {

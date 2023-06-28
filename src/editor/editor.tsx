@@ -1,4 +1,4 @@
-import { EditorProvider } from './ctx'
+import { EditorProvider, emitter, CanvasState } from './ctx'
 import Canvas from './Canvas'
 import { LegacyRef, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Loading from '@/components/loading'
@@ -32,13 +32,17 @@ export default function Editor({
   const canvasEl = useRef<HTMLCanvasElement | null>(null)
   const canvasElParent = useRef<HTMLDivElement | null>(null)
   const [sourcePanelOpen, setSourcePanelOpen]=useState(false)
+  const [canvasState, setCanvasState]=useState<CanvasState>({
+    zoom: 1,
+    dragMode: false
+  })
   const [selectedType, setselectedType] = useState<string | undefined>(undefined)
   
-  const setDimensions = useCallback(() => {
-    canvas?.canvas?.setHeight(canvasElParent.current?.clientHeight || 0, {})
-    canvas?.canvas?.setWidth(canvasElParent.current?.clientWidth || 0, {})
-    canvas?.canvas?.renderAll()
-  }, [canvas])
+  // const setDimensions = useCallback(() => {
+  //   canvas?.canvas?.setHeight(canvasElParent.current?.clientHeight || 0, {})
+  //   canvas?.canvas?.setWidth(canvasElParent.current?.clientWidth || 0, {})
+  //   canvas?.canvas?.renderAll()
+  // }, [canvas])
 
   function getSelectedType(type: string) {
     setselectedType(type || undefined);
@@ -46,17 +50,16 @@ export default function Editor({
   
   useEffect(() => {
     const canvas = new Canvas(canvasEl.current!, {
-      // width: 600,
-      // height: 800,
       getSelectedType
     })
     setCanvas(canvas);
     
-    window.addEventListener('resize', setDimensions)
-    
     setTimeout(()=> {
-      canvas.bindEvents()
       onReady?.(canvas)
+      canvas.bindEvents()
+      canvas.observeCanvas([
+        document.getElementsByClassName('canvas-container')[0]
+      ])
     }, 0)
     
     // fixme: for local debug, will remove
@@ -65,20 +68,34 @@ export default function Editor({
       _editor: canvas,
       _fab: fabric
     })
-    
+  
+    // window.addEventListener('resize', setDimensions)
+  
     return () => {
       canvas.canvas.dispose()
-      window.removeEventListener('resize', setDimensions)
+      emitter.off()
+      canvas.detachResizeObserver()
+      // window.removeEventListener('resize', setDimensions)
     }
   }, [])
   
+  useEffect(()=> {
+    // fixme: let canvas instance to access editor canvas state
+    canvas && Object.assign(canvas, {canvasState})
+  }, [canvas, canvasState])
+  
   return (
-    <EditorProvider value={{
-      canvas,
-      setCanvas,
-      panelOpen: sourcePanelOpen,
-      setPanelOpen: setSourcePanelOpen
-    }}>
+    <EditorProvider
+      value={{
+        canvas,
+        setCanvas,
+        panelOpen: sourcePanelOpen,
+        setPanelOpen: setSourcePanelOpen,
+        emitter,
+        canvasState,
+        setCanvasState
+      }}
+    >
       <div className={cs(styles.wrap, className)}>
         {!canvas && <Loading />}
         {canvas && renderTopbar?.(canvas!)}

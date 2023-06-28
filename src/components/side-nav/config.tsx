@@ -25,12 +25,12 @@ export const categories: CategoryItem[] = [
     type: 'property',
     name: 'Property'
   },
-  // {
-  //   type: 'icon',
-  //   name: 'Icon'
-  // },
-  // {
-  //   type: 'logo',
-  //   name: 'Logo'
-  // },
+  {
+    type: 'icon',
+    name: 'Icon'
+  },
+  {
+    type: 'logo',
+    name: 'Logo'
+  },
 ]
