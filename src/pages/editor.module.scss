@@ -7,11 +7,7 @@
 .canvas {
   display: flex;
   overflow: auto;
-  border-radius: 4px;
-  > div {
-    height: 100% !important;
-    > canvas {
-      height: 100% !important;
+  border-radius: 8px;
 
   :global {
     .canvas-container {
@@ -21,7 +17,5 @@
 
   canvas {
     transition: all 0.3s ease;
-  }
-    }
   }
 }

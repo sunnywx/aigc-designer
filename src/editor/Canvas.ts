@@ -4,6 +4,7 @@ import { fabric } from "fabric";
 import { CIRCLE, LINE, RECTANGLE, TEXT } from "@/editor/config/shapes";
 import {emitter} from '@/editor/ctx'
 import {debounce} from 'lodash'
+import { TextOptions } from "fabric/fabric-impl";
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
   fillColor?: string;
@@ -48,13 +49,10 @@ export default class Canvas {
     this.options=_.defaults(this.options, passedOptions, {
       ...this.lastDimension,
       backgroundColor: '#f5f5f5',
-      fillColor: 'rgba(255, 255, 255, 0.0)',
+      fillColor: '#143ab8',
       strokeColor: '#000',
-      backgroundColor: '#fff',
-      fillColor: '#ffffff',
       textAlign: 'left',
       fontFamily: "arial",
-      strokeColor: '#000000',
       zoomStep: 0.2,
       minZoom: 0.2,
       maxZoom: 2,
@@ -230,15 +228,15 @@ export default class Canvas {
     })
   }
 
-  addText(text: string) {
+  addText(text: string, option: TextOptions={}) {
     // use stroke in text fill, fill default is most of the time transparent
     const object = new fabric.Textbox(text, {
       ...TEXT, 
-      fill: this.options.strokeColor
+      fill: this.options.strokeColor,
+      ...option
     })
     object.set({ text: text })
-    // this.canvas.viewportCenterObject(object)
-    this.canvas.add(object)
+    this.canvas.centerObject(object).add(object)
   }
 
   addImage(url: string) {

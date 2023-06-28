@@ -32,12 +32,12 @@ export default function SideNav(props: Props) {
   const [pin, setPin] = useState(false) // panel pinned
   const [active, setActive] = useState<ElementType>('text')
   
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('click', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside);
+  //   };
+  // }, []);
   
   function handleClickOutside(ev: any): void {
     if (!panelRef.current?.contains(ev.target) && !pin) {
