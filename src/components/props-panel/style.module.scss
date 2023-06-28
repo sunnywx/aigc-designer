@@ -2,4 +2,44 @@
   width: 240px;
   height: 637px !important;
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  .panelContent {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    & .generalInput {
+      padding-inline: 10px;
+      border-radius: 4px;
+      height: 30px;
+      outline: none;
+      border: 1px solid var(--blue-300);
+      &:hover, &:active, &:focus {
+        border: 2px solid var(--blue-500);
+      }
+    }
+  }
+}
+.alignmentBtns {
+  display: flex;
+  grid-template-columns: repeat(3, 1fr);
+  border-radius: 4px;
+  border: 1px solid var(--gray-200);
+  button {
+    flex: 1;
+    border-radius: 0;
+    & svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+.fontFamilySelector {
+  height: 30px;
+  width: 100%;
+  & .MuiSelect-select {
+    max-height: 30px;
+    border: 1px solid red;
+  }
 }

@@ -8,10 +8,13 @@ import { TextOptions } from "fabric/fabric-impl";
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
   fillColor?: string;
+  textAlign?: string
+  fontFamily?: string;
   strokeColor?: string;
   zoomStep?: number;
   minZoom?: number;
   maxZoom?: number;
+  getSelectedType: (type: string) => void;
 }
 
 // Canvas class using fabric
@@ -23,7 +26,7 @@ export default class Canvas {
   resizeObserver: ResizeObserver | null;
   lastDimension: {width: number, height: number};
   
-  constructor(el: string | HTMLCanvasElement, options={}) {
+  constructor(el: string | HTMLCanvasElement, passedOptions={}) {
     if (typeof el === 'string') {
       let canElem = document.getElementById(el)
       if (!canElem) {
@@ -43,11 +46,16 @@ export default class Canvas {
       width: 600,
       height: 650,
     }
-    this.options=_.defaults(this.options, options, {
+    this.options=_.defaults(this.options, passedOptions, {
       ...this.lastDimension,
       backgroundColor: '#f5f5f5',
       fillColor: 'rgba(255, 255, 255, 0.0)',
       strokeColor: '#000',
+      backgroundColor: '#fff',
+      fillColor: '#ffffff',
+      textAlign: 'left',
+      fontFamily: "arial",
+      strokeColor: '#000000',
       zoomStep: 0.2,
       minZoom: 0.2,
       maxZoom: 2,
@@ -94,17 +102,35 @@ export default class Canvas {
   bindEvents(){
     const inst=this
     const canvas=this.canvas
-    const {minZoom, maxZoom, width: initialWidth, height: initialHeight}=this.options
+    const {minZoom, maxZoom, width: initialWidth, height: initialHeight, getSelectedType} = this.options
     
-    // canvas.on('selection:cleared', function() {
-    //   console.log('clear selection')
-    // })
-    // canvas.on('selection:created', function(e: any) {
-    //   console.log('created selection')
-    // })
-    // canvas.on('selection:updated', function (e: any) {
-    //   console.log('update selection')
-    // })
+    canvas.on('selection:cleared', function() {
+      // canvas.setSelectedObject([])
+      console.log('clear selection')
+      getSelectedType("")
+    })
+    canvas.on('selection:created', function(e: any) {
+      // setSelectedObject(e.selected)
+      console.log('created selection')
+      if (e.selected.length === 1) {
+        if (e.selected[0].type === "text") {
+          getSelectedType("text")
+          return
+        }
+      }
+      getSelectedType("notText")
+    })
+    canvas.on('selection:updated', function (e: any) {
+      // setSelectedObject(e.selected)
+      console.log('update selection')
+      if (e.selected.length === 1) {
+        if (e.selected[0].type === "text") {
+          getSelectedType("text")
+          return
+        }
+      }
+      getSelectedType("notText")
+    })
   
     // zoom and panning
     // see: http://fabricjs.com/fabric-intro-part-5#pan_zoom
@@ -290,6 +316,30 @@ export default class Canvas {
   setFillColor(fill: string) {
     this.setOption('fillColor', fill)
     this.canvas.getActiveObjects().forEach((object) => object.set({ fill }))
+    this.canvas.requestRenderAll()
+  }
+
+  setTextAlign(alignment: string) {
+    this.setOption('textAlign', alignment)
+    this.canvas.getActiveObjects().forEach((object) => {
+      object.set({ textAlign: alignment })
+    })
+    this.canvas.requestRenderAll()
+  }
+
+  setTextFontFamily(fontFamily: string) {
+    this.setOption('fontFamily', fontFamily)
+    this.canvas.getActiveObjects().forEach((object) => {
+      object.set({ fontFamily: fontFamily })
+    })
+    this.canvas.requestRenderAll()
+  }
+
+  setTextFontSize(fontSize: string) {
+    this.setOption('fontSize', fontSize)
+    this.canvas.getActiveObjects().forEach((object) => {
+      object.set({ fontSize: fontSize })
+    })
     this.canvas.requestRenderAll()
   }
   
