@@ -1,6 +1,6 @@
 import { EditorProvider, emitter, CanvasState } from './ctx'
 import Canvas from './Canvas'
-import { LegacyRef, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { LegacyRef, ReactNode, useEffect, useRef, useState } from "react";
 import Loading from '@/components/loading'
 import cs from 'classnames'
 import {fabric} from 'fabric'
