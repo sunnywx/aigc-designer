@@ -6,13 +6,14 @@ interface Props {
   icon?: ReactNode,
   iconSize?: string | number,
   onClick?: () => void,
-  children?: ReactNode
+  children?: ReactNode,
+  className?: string
 }
 
-export default function ActionButton({ title, icon, iconSize = '20px', children, onClick }: Props) {
+export default function ActionButton({ title, icon, iconSize = '20px', children, onClick, className }: Props) {
   return (
     <Tooltip title={title}>
-      <div>
+      <div className={className}>
         {children}
         {icon && (
           <IconButton sx={{ fontSize: iconSize }} onClick={() => onClick?.()}>

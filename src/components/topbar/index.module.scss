@@ -31,4 +31,9 @@ $svgFill: #ccc;
     cursor: pointer;
     text-align: center;
   }
+
+  .active {
+    background: #dfe3ec;
+    border-radius: 100%;
+  }
 }
