@@ -41,7 +41,6 @@ export default function Editor({
   }, [canvas])
 
   function getSelectedType(type: string) {
-    console.log("editor.tsx ~ line 43: type:", type);
     setselectedType(type || undefined);
   }
   
@@ -72,11 +71,6 @@ export default function Editor({
       window.removeEventListener('resize', setDimensions)
     }
   }, [])
-
-  useEffect(() => {
-    if(!canvas) return
-    console.log("editor.tsx ~ line 76: canvas.el:", canvas);
-  }, [canvas])
   
   return (
     <EditorProvider value={{

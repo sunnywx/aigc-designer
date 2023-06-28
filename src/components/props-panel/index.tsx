@@ -78,7 +78,7 @@ export default function PropsPanel({canvas, selectedType}: Props) {
               onChange={e => canvas?.setTextFontFamily(e.target.value)}
             >
               {fontArr.filter(Boolean).map(font => (
-                <MenuItem value={font}>
+                <MenuItem key={font} value={font}>
                   <Typography fontFamily={font} fontSize="14px">{font}</Typography>
                 </MenuItem>
               ))

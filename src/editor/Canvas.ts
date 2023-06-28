@@ -58,7 +58,6 @@ export default class Canvas {
   }
   
   setOption(key: keyof CanvasOptions | Partial<CanvasOptions>, val?: ValueOf<CanvasOptions>) {
-    console.log("Canvas.ts ~ line 56: key, val:", key, val);
     if (typeof key === 'string') {
       this.options[key] = val;
     } else if (typeof key === 'object') {
