@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cs from 'classnames'
 import {Canvas, useEditor} from '@/editor'
 import Panel from '@/components/panel'
@@ -13,8 +13,13 @@ import PropertyPanel from './property-panel'
 import TemplatePanel from './template-panel'
 import IconPanel from './icon-panel'
 import LogoPanel from './logo-panel'
+import { RxLetterCaseCapitalize } from "react-icons/rx";
+import { FaShapes } from "react-icons/fa";
 
 import styles from './index.module.scss';
+import { MdInsertPhoto } from 'react-icons/md';
+import { GrTemplate } from 'react-icons/gr';
+import { TfiLayoutPlaceholder } from 'react-icons/tfi';
 
 interface Props {
   className?: string;
@@ -34,26 +39,6 @@ export default function SideNav(props: Props) {
     };
   }, []);
   
-  // fix canvas offset when panel open
-  useEffect(()=> {
-    if(!panelRef.current) return
-  
-    const canvasRef=document.getElementById('editor-canvas')
-    const sourcePanel=document.getElementsByClassName('source-panel')[0]
-    if(panelOpen){
-      // calc editor canvas offsetLeft diff with source panel open offset
-      const offsetLeftDiff=canvasRef.offsetLeft - (sourcePanel.clientWidth + 90)
-      if(offsetLeftDiff < 0){
-        // timeout with panel animation delay time
-        setTimeout(()=> {
-          canvasRef.style.setProperty('transform', `translateX(${Math.abs(offsetLeftDiff) + 20}px)`)
-        }, 300)
-      }
-    } else {
-      canvasRef.style.setProperty('transform', `translateX(0)`)
-    }
-  }, [panelOpen])
-  
   function handleClickOutside(ev: any): void {
     if (!panelRef.current?.contains(ev.target) && !pin) {
       setPanelOpen?.(false)
@@ -64,7 +49,7 @@ export default function SideNav(props: Props) {
     if (active === 'text') {
       return <TextPanel />;
     }
-    if (active === 'templates') {
+    if (active === 'template') {
       return <TemplatePanel />;
     }
     if (active === 'photo') {
@@ -87,6 +72,23 @@ export default function SideNav(props: Props) {
     }
     return null;
   }
+
+  const getIcon = (title: string) => {
+    switch (title) {
+      case "text":
+        return <RxLetterCaseCapitalize />
+      case "shape":
+        return <FaShapes />
+      case "photo":
+        return <MdInsertPhoto />
+      case "template":
+        return <GrTemplate />
+      case "property":
+        return <TfiLayoutPlaceholder />
+      default:
+        return <TfiLayoutPlaceholder />
+    }
+  }
   
   return (
     <div ref={panelRef} style={{
@@ -100,6 +102,7 @@ export default function SideNav(props: Props) {
               {...gp}
               key={gp.type}
               active={active === gp.type}
+              icon={getIcon(gp.type)}
               onClick={() => {
                 setPanelOpen?.(true)
                 setActive(gp.type);

@@ -1,6 +1,6 @@
 import { EditorProvider, emitter, CanvasState } from './ctx'
 import Canvas from './Canvas'
-import { LegacyRef, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { LegacyRef, ReactNode, useEffect, useRef, useState } from "react";
 import Loading from '@/components/loading'
 import cs from 'classnames'
 import {fabric} from 'fabric'
@@ -36,15 +36,22 @@ export default function Editor({
     zoom: 1,
     dragMode: false
   })
+  const [selectedType, setselectedType] = useState<string | undefined>(undefined)
   
   // const setDimensions = useCallback(() => {
   //   canvas?.canvas?.setHeight(canvasElParent.current?.clientHeight || 0, {})
   //   canvas?.canvas?.setWidth(canvasElParent.current?.clientWidth || 0, {})
   //   canvas?.canvas?.renderAll()
   // }, [canvas])
+
+  function getSelectedType(type: string) {
+    setselectedType(type || undefined);
+  }
   
   useEffect(() => {
-    const canvas=new Canvas(canvasEl.current!)
+    const canvas = new Canvas(canvasEl.current!, {
+      getSelectedType
+    })
     setCanvas(canvas);
     
     setTimeout(()=> {
@@ -103,7 +110,7 @@ export default function Editor({
             <canvas ref={canvasEl as LegacyRef<any>}/>
           </div>
           {children}
-          {canvas && renderRightPanel?.(canvas!)}
+          {canvas && renderRightPanel?.(canvas!, selectedType)}
         </div>
       </div>
     </EditorProvider>

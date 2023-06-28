@@ -33,6 +33,6 @@ export const TEXT = {
   left: 100,
   top: 100,
   fontSize: 50,
-  fontFamily: 'Roboto',
+  fontFamily: 'Arial',
   fill: STROKE
 }

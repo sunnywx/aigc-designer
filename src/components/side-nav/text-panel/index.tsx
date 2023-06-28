@@ -12,13 +12,13 @@ export default function TextPanel() {
   }
   
   return (
-    <div className={styles.wrap}>
+    <>
       <input
         type='text'
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <Button variant="outlined" size="small" onClick={onAddText}>Add Text</Button>
-    </div>
+      <Button variant="contained" size="small" onClick={onAddText}>Add Text</Button>
+    </>
   );
 }
