@@ -32,17 +32,24 @@ export default function Editor({
   const canvasEl = useRef<HTMLCanvasElement | null>(null)
   const canvasElParent = useRef<HTMLDivElement | null>(null)
   const [sourcePanelOpen, setSourcePanelOpen]=useState(false)
+  const [selectedType, setselectedType] = useState<string | undefined>(undefined)
   
   const setDimensions = useCallback(() => {
     canvas?.canvas?.setHeight(canvasElParent.current?.clientHeight || 0, {})
     canvas?.canvas?.setWidth(canvasElParent.current?.clientWidth || 0, {})
     canvas?.canvas?.renderAll()
   }, [canvas])
+
+  function getSelectedType(type: string) {
+    console.log("editor.tsx ~ line 43: type:", type);
+    setselectedType(type || undefined);
+  }
   
   useEffect(() => {
-    const canvas=new Canvas(canvasEl.current!, {
+    const canvas = new Canvas(canvasEl.current!, {
       // width: 600,
-      // height: 800
+      // height: 800,
+      getSelectedType
     })
     setCanvas(canvas);
     
@@ -65,6 +72,11 @@ export default function Editor({
       window.removeEventListener('resize', setDimensions)
     }
   }, [])
+
+  useEffect(() => {
+    if(!canvas) return
+    console.log("editor.tsx ~ line 76: canvas.el:", canvas);
+  }, [canvas])
   
   return (
     <EditorProvider value={{
@@ -87,7 +99,7 @@ export default function Editor({
             <canvas ref={canvasEl as LegacyRef<any>}/>
           </div>
           {children}
-          {canvas && renderRightPanel?.(canvas!)}
+          {canvas && renderRightPanel?.(canvas!, selectedType)}
         </div>
       </div>
     </EditorProvider>

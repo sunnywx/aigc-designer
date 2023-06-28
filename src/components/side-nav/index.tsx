@@ -39,26 +39,6 @@ export default function SideNav(props: Props) {
     };
   }, []);
   
-  // fix canvas offset when panel open
-  useEffect(()=> {
-    if(!panelRef.current) return
-  
-    const canvasRef=document.getElementById('editor-canvas')
-    const sourcePanel=document.getElementsByClassName('source-panel')[0]
-    if(panelOpen && canvasRef){
-      // calc editor canvas offsetLeft diff with source panel open offset
-      const offsetLeftDiff=canvasRef?.offsetLeft - (sourcePanel.clientWidth + 90)
-      if(offsetLeftDiff < 0){
-        // timeout with panel animation delay time
-        setTimeout(()=> {
-          canvasRef?.style.setProperty('transform', `translateX(${Math.abs(offsetLeftDiff) + 20}px)`)
-        }, 300)
-      }
-    } else {
-      canvasRef?.style.setProperty('transform', `translateX(0)`)
-    }
-  }, [panelOpen])
-  
   function handleClickOutside(ev: any): void {
     if (!panelRef.current?.contains(ev.target) && !pin) {
       setPanelOpen?.(false)

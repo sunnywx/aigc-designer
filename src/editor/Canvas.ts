@@ -8,10 +8,13 @@ export interface CanvasOptions extends fabric.ICanvasOptions {
   // height?: number | string;
   // backgroundColor?: string;
   fillColor?: string;
+  textAlign?: string
+  fontFamily?: string;
   strokeColor?: string;
   zoomStep?: number;
   minZoom?: number;
   maxZoom?: number;
+  getSelectedType: (type: string) => void;
 }
 
 // Canvas class using fabric
@@ -21,7 +24,7 @@ export default class Canvas {
   ctx: CanvasRenderingContext2D;
   options: CanvasOptions;
   
-  constructor(el: string | HTMLCanvasElement, options={}) {
+  constructor(el: string | HTMLCanvasElement, passedOptions={}) {
     if (typeof el === 'string') {
       let canElem = document.getElementById(el)
       if (!canElem) {
@@ -37,12 +40,14 @@ export default class Canvas {
       throw Error('Unable to initialize canvas element')
     }
     this.ctx = this.el.getContext('2d')
-    this.options=_.defaults(this.options, options, {
+    this.options = _.defaults(this.options, passedOptions, {
       width: 600,
       height: 650,
-      backgroundColor: '#f5f5f5',
-      fillColor: 'rgba(255, 255, 255, 0.0)',
-      strokeColor: '#000',
+      backgroundColor: '#fff',
+      fillColor: '#ffffff',
+      textAlign: 'left',
+      fontFamily: "arial",
+      strokeColor: '#000000',
       zoomStep: 0.2,
       minZoom: 0.2,
       maxZoom: 2.6
@@ -53,6 +58,7 @@ export default class Canvas {
   }
   
   setOption(key: keyof CanvasOptions | Partial<CanvasOptions>, val?: ValueOf<CanvasOptions>) {
+    console.log("Canvas.ts ~ line 56: key, val:", key, val);
     if (typeof key === 'string') {
       this.options[key] = val;
     } else if (typeof key === 'object') {
@@ -62,19 +68,34 @@ export default class Canvas {
   
   bindEvents(){
     const canvas=this.canvas
-    const {minZoom, maxZoom}=this.options
+    const {minZoom, maxZoom, getSelectedType} = this.options
     
     canvas.on('selection:cleared', function() {
       // canvas.setSelectedObject([])
       console.log('clear selection')
+      getSelectedType("")
     })
     canvas.on('selection:created', function(e: any) {
       // setSelectedObject(e.selected)
       console.log('created selection')
+      if (e.selected.length === 1) {
+        if (e.selected[0].type === "text") {
+          getSelectedType("text")
+          return
+        }
+      }
+      getSelectedType("notText")
     })
     canvas.on('selection:updated', function (e: any) {
       // setSelectedObject(e.selected)
       console.log('update selection')
+      if (e.selected.length === 1) {
+        if (e.selected[0].type === "text") {
+          getSelectedType("text")
+          return
+        }
+      }
+      getSelectedType("notText")
     })
   
     // zoom and panning
@@ -202,6 +223,30 @@ export default class Canvas {
   setFillColor(fill: string) {
     this.setOption('fillColor', fill)
     this.canvas.getActiveObjects().forEach((object) => object.set({ fill }))
+    this.canvas.requestRenderAll()
+  }
+
+  setTextAlign(alignment: string) {
+    this.setOption('textAlign', alignment)
+    this.canvas.getActiveObjects().forEach((object) => {
+      object.set({ textAlign: alignment })
+    })
+    this.canvas.requestRenderAll()
+  }
+
+  setTextFontFamily(fontFamily: string) {
+    this.setOption('fontFamily', fontFamily)
+    this.canvas.getActiveObjects().forEach((object) => {
+      object.set({ fontFamily: fontFamily })
+    })
+    this.canvas.requestRenderAll()
+  }
+
+  setTextFontSize(fontSize: string) {
+    this.setOption('fontSize', fontSize)
+    this.canvas.getActiveObjects().forEach((object) => {
+      object.set({ fontSize: fontSize })
+    })
     this.canvas.requestRenderAll()
   }
   
