@@ -13,7 +13,7 @@ interface Props {
   canvasClassName?: string;
   renderTopbar?: (canvas: Canvas) => ReactNode;
   renderLeftPanel?: (canvas: Canvas) => ReactNode;
-  renderRightPanel?: (canvas: Canvas) => ReactNode;
+  renderRightPanel?: (canvas: Canvas, selectType?: string) => ReactNode;
   children?: ReactNode;
   onReady?: (canvas: Canvas)=> void;
 }

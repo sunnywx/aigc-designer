@@ -24,7 +24,7 @@ export default function EditorPage() {
             <SideNav canvas={canvas}/>
           )
         }}
-        renderRightPanel={(canvas, selectedType) => {
+        renderRightPanel={(canvas, selectedType='') => {
           return (
             <RightPanel canvas={canvas} selectedType={selectedType} />
           )
