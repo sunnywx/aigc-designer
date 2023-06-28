@@ -27,12 +27,12 @@ export default function SideNav(props: Props) {
   const [pin, setPin] = useState(false) // panel pinned
   const [active, setActive] = useState<ElementType>('text')
   
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('click', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside);
+  //   };
+  // }, []);
   
   // fix canvas offset when panel open
   useEffect(()=> {
