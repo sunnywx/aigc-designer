@@ -4,6 +4,7 @@ import { LegacyRef, ReactNode, useEffect, useRef, useState } from "react";
 import Loading from '@/components/loading'
 import cs from 'classnames'
 import {fabric} from 'fabric'
+import Preview from './preview'
 
 import styles from './style.module.scss'
 
@@ -34,15 +35,11 @@ export default function Editor({
   const [sourcePanelOpen, setSourcePanelOpen]=useState(false)
   const [canvasState, setCanvasState]=useState<CanvasState>({
     zoom: 1,
-    dragMode: false
+    dragMode: false,
+    preview: false
   })
   const [selectedType, setselectedType] = useState<string | undefined>(undefined)
-  
-  // const setDimensions = useCallback(() => {
-  //   canvas?.canvas?.setHeight(canvasElParent.current?.clientHeight || 0, {})
-  //   canvas?.canvas?.setWidth(canvasElParent.current?.clientWidth || 0, {})
-  //   canvas?.canvas?.renderAll()
-  // }, [canvas])
+  const {preview}=canvasState
 
   function getSelectedType(type: string) {
     setselectedType(type || undefined);
@@ -68,14 +65,11 @@ export default function Editor({
       _editor: canvas,
       _fab: fabric
     })
-  
-    // window.addEventListener('resize', setDimensions)
-  
+    
     return () => {
       canvas.canvas.dispose()
       emitter.off()
       canvas.detachResizeObserver()
-      // window.removeEventListener('resize', setDimensions)
     }
   }, [])
   
@@ -103,11 +97,12 @@ export default function Editor({
           {canvas && renderLeftPanel?.(canvas)}
           <div
             ref={canvasElParent as LegacyRef<any>}
-            className={canvasClassName}
+            className={cs(styles.canvasWrap, canvasClassName)}
             id='editor-canvas'
             style={{visibility: canvas ? 'visible' : 'hidden'}}
           >
             <canvas ref={canvasEl as LegacyRef<any>}/>
+            {preview && <Preview />}
           </div>
           {children}
           {canvas && renderRightPanel?.(canvas!, selectedType)}

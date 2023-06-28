@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default function SideNav(props: Props) {
-  const {panelOpen, setPanelOpen}=useEditor()
+  const {panelOpen, setPanelOpen, canvasState}=useEditor()
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [pin, setPin] = useState(false) // panel pinned
   const [active, setActive] = useState<ElementType>('text')
@@ -113,7 +113,8 @@ export default function SideNav(props: Props) {
   return (
     <div ref={panelRef} style={{
       position: 'relative',
-      height: 'max-content'
+      height: 'max-content',
+      visibility: canvasState.preview ? 'hidden' : 'visible'
     }}>
       <div className={styles.nav}>
         {categories.map((gp) => {
@@ -135,7 +136,7 @@ export default function SideNav(props: Props) {
         title={categories.find(v => v.type === active)?.name || ''}
         style={{ transform: 'translateX(90px)' }}
         width='280px'
-        className={cs('source-panel', styles.panel)}
+        className={cs('source-panel', styles.panel, {[styles.preview]: canvasState.preview})}
         onClose={() => setPanelOpen?.(false)}
         onPin={()=> setPin(v=> !v)}
         visible={!!panelOpen}

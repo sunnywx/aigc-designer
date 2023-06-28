@@ -1,7 +1,8 @@
 // canvas editor context
-import { createContext, useContext, Dispatch, SetStateAction, ReactNode } from 'react'
+import { createContext, useContext, Dispatch, SetStateAction, ReactNode, useCallback } from 'react'
 import Canvas from './Canvas'
 import mitt, {Emitter} from 'mitt'
+import { IDataURLOptions } from "fabric/fabric-impl";
 
 export type EditorContextType = {
   canvas: Canvas | null
@@ -23,6 +24,7 @@ export const emitter=mitt<EmitEvents>()
 export type CanvasState={
   zoom?: number
   dragMode?: boolean
+  preview?: boolean
 }
 
 const noop=()=> {}
@@ -43,6 +45,31 @@ export function useEditor() {
     throw Error('useEditor should inside react component')
   }
   return ctx;
+}
+
+// export canvas as image
+export function useCanvasImage(resetCanvas?: boolean){
+  const {canvas}=useEditor()
+  const lastZoom=canvas?.canvas?.getZoom()
+  
+  const getImageData=useCallback((option: IDataURLOptions={format: 'png'})=> {
+    // reset canvas zoom to take snapshot
+    canvas?.zoomFit()
+
+    const imgBase64=canvas?.canvas?.toDataURL(option) as string
+  
+    // restore canvas zoom
+    if(resetCanvas){
+      const vpt=canvas?.canvas.viewportTransform
+      canvas?.canvas?.setViewportTransform([lastZoom, 0, 0, lastZoom, vpt[4], vpt[5]])
+    }
+    
+    return imgBase64
+  }, [canvas, lastZoom, resetCanvas])
+  
+  return {
+    getImageData
+  }
 }
 
 interface Props {

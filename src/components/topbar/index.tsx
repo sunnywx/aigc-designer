@@ -1,5 +1,5 @@
-import { AppBar, Grid, Toolbar, Typography, IconButton, Tooltip } from "@mui/material";
-import { Canvas, useEditor, downloadFile } from '@/editor'
+import { AppBar, Grid, Toolbar, Typography, Switch } from "@mui/material";
+import { Canvas, useEditor, downloadFile, useCanvasImage } from '@/editor'
 import styles from './index.module.scss'
 import Zoomer from './zoomer'
 import { ReactNode, useState } from "react";
@@ -13,27 +13,15 @@ import ViewSchemaModal from './view-schema-modal'
 import ActionButton from '@/components/action-button'
 
 export default function Topbar() {
-  const {canvas}=useEditor()
+  const {canvas, canvasState, setCanvasState}=useEditor()
   const [newFileOpen, setNewFileOpen]=useState(false)
   const [aiOpen, setAiOpen]=useState(false)
-  const [previewOpen, setPreviewOpen]=useState(false)
   const [schemaOpen, setSchemaOpen]=useState(false)
+  const {getImageData}=useCanvasImage(true)
   
   function onDownload(){
-    const lastZoom=canvas?.canvas?.getZoom()
-    // reset canvas zoom to take snapshot
-    canvas?.zoomFit()
-    
-    const imgBase64=canvas?.canvas?.toDataURL({
-      format: 'png',
-    }) as string
-    
-    // restore canvas zoom
-    const vpt=canvas?.canvas.viewportTransform
-    canvas?.canvas?.setViewportTransform([lastZoom, 0, 0, lastZoom, vpt[4], vpt[5]])
-    
     // todo: move filename to New design form config
-    downloadFile(imgBase64, 'aigc-design-01.png')
+    downloadFile(getImageData(), 'aigc-design-01.png')
   }
   
   return (
@@ -51,7 +39,13 @@ export default function Topbar() {
               <ActionButton icon={<AiOutlineFileAdd />} title='New design' onClick={()=> setNewFileOpen(true)}/>
               <ActionButton icon={'AI'} title='AI generative image' onClick={()=> setAiOpen(true)}/>
               <ActionButton icon={<FaCode />} title='View schema' onClick={()=> setSchemaOpen(true)}/>
-              <ActionButton icon={<GrView />} title='Preview' onClick={()=> setPreviewOpen(true)}/>
+              <ActionButton title='Preview'>
+                <Switch
+                  color='purple'
+                  value={canvasState.preview}
+                  onChange={e=> setCanvasState(prev=> ({...prev, preview : e.target.checked}))}
+                />
+              </ActionButton>
               <ActionButton icon={<AiOutlineCloudDownload />} title='Download' onClick={onDownload}/>
               {/*<Button variant='outlined' size="small">Login</Button>*/}
             </Grid>

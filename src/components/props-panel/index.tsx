@@ -1,4 +1,4 @@
-import {Canvas} from '@/editor'
+import {Canvas, useEditor} from '@/editor'
 import styles from './style.module.scss'
 import { Box, Button, Divider, IconButton, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -7,6 +7,7 @@ import Panel from '@/components/panel'
 import { ColorInput } from '../ColorInput';
 import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight } from 'react-icons/fa';
 import { makeStyles } from '@mui/styles';
+import cs from 'classnames'
 
 interface Props {
   canvas: Canvas;
@@ -17,6 +18,7 @@ export default function PropsPanel({canvas, selectedType}: Props) {
   const classes = useStyles();
   const [strokeColor, setStrokeColor] = useState('')
   const [fillColor, setFillColor] = useState('')
+  const {canvasState}=useEditor()
   
   const onSetStrokeColor = () => {
     canvas?.setStrokeColor(strokeColor)
@@ -48,7 +50,7 @@ export default function PropsPanel({canvas, selectedType}: Props) {
   return (
     <Panel
       title='Setting panel'
-      className={styles.panel}
+      className={cs(styles.panel, {[styles.preview]: !!canvasState.preview})}
       pinned={false}
       closable={false}
       visible
