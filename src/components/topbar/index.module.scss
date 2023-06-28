@@ -32,8 +32,18 @@ $svgFill: #ccc;
     text-align: center;
   }
 
-  .active {
-    background: #dfe3ec;
+  .btnMode {
     border-radius: 100%;
+    margin-right: 10px;
+
+    &.active {
+      background: #dfe3ec;
+    }
+
+    &.disable{
+      background: #c3c4c5;
+      opacity: 0.5;
+    }
   }
+
 }
