@@ -10,26 +10,9 @@ import {FaCode} from 'react-icons/fa'
 import NewDesignModal from "./new-design-modal";
 import AiImageModal from '@/components/aigc-form'
 import ViewSchemaModal from './view-schema-modal'
+import ActionButton from '@/components/action-button'
 
-interface Props {
-  canvas: Canvas
-}
-
-function ActionButton({ tips, icon, onClick }: {
-  tips?: ReactNode,
-  icon: ReactNode,
-  onClick: ()=> void
-}) {
-  return (
-    <Tooltip title={tips}>
-      <IconButton sx={{fontSize: '20px'}} onClick={onClick}>
-        {icon}
-      </IconButton>
-    </Tooltip>
-  )
-}
-
-export default function Topbar({ canvas }: Props) {
+export default function Topbar() {
   const [newFileOpen, setNewFileOpen]=useState(false)
   const [aiOpen, setAiOpen]=useState(false)
   const [previewOpen, setPreviewOpen]=useState(false)
@@ -50,10 +33,10 @@ export default function Topbar({ canvas }: Props) {
           </Grid>
           <Grid item md={4}>
             <Grid container alignItems="center" justifyContent="flex-end" gap="10px" className={styles.btns}>
-              <ActionButton icon={<AiOutlineFileAdd />} tips='New design' onClick={()=> setNewFileOpen(true)}/>
-              <ActionButton icon={'AI'} tips='AI generative image' onClick={()=> setAiOpen(true)}/>
-              <ActionButton icon={<FaCode />} tips='View schema' onClick={()=> setSchemaOpen(true)}/>
-              <ActionButton icon={<GrView />} tips='Preview' onClick={()=> setPreviewOpen(true)}/>
+              <ActionButton icon={<AiOutlineFileAdd />} title='New design' onClick={()=> setNewFileOpen(true)}/>
+              <ActionButton icon={'AI'} title='AI generative image' onClick={()=> setAiOpen(true)}/>
+              <ActionButton icon={<FaCode />} title='View schema' onClick={()=> setSchemaOpen(true)}/>
+              <ActionButton icon={<GrView />} title='Preview' onClick={()=> setPreviewOpen(true)}/>
               <ActionButton icon={<AiOutlineCloudDownload />} tips='Download' onClick={onDownload}/>
               {/*<Button variant='outlined' size="small">Login</Button>*/}
             </Grid>

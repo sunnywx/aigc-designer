@@ -2,11 +2,10 @@ import _ from "lodash"
 import { ValueOf } from "next/constants";
 import { fabric } from "fabric";
 import { CIRCLE, LINE, RECTANGLE, TEXT } from "@/editor/config/shapes";
+import {emitter} from '@/editor/ctx'
+import {debounce} from 'lodash'
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
-  // width?: number | string;
-  // height?: number | string;
-  // backgroundColor?: string;
   fillColor?: string;
   strokeColor?: string;
   zoomStep?: number;
@@ -20,6 +19,8 @@ export default class Canvas {
   canvas: fabric.Canvas;
   ctx: CanvasRenderingContext2D;
   options: CanvasOptions;
+  resizeObserver: ResizeObserver | null;
+  lastDimension: {width: number, height: number};
   
   constructor(el: string | HTMLCanvasElement, options={}) {
     if (typeof el === 'string') {
@@ -37,19 +38,24 @@ export default class Canvas {
       throw Error('Unable to initialize canvas element')
     }
     this.ctx = this.el.getContext('2d')
-    this.options=_.defaults(this.options, options, {
+    this.lastDimension={
       width: 600,
       height: 650,
+    }
+    this.options=_.defaults(this.options, options, {
+      ...this.lastDimension,
       backgroundColor: '#f5f5f5',
       fillColor: 'rgba(255, 255, 255, 0.0)',
       strokeColor: '#000',
       zoomStep: 0.2,
       minZoom: 0.2,
-      maxZoom: 2.6
+      maxZoom: 2,
     } as Partial<CanvasOptions>)
     
     this.canvas=new fabric.Canvas(this.el,
       _.pick(this.options, ['width', 'height', 'backgroundColor']))
+    
+    this.attachResizeObserver()
   }
   
   setOption(key: keyof CanvasOptions | Partial<CanvasOptions>, val?: ValueOf<CanvasOptions>) {
@@ -60,36 +66,63 @@ export default class Canvas {
     }
   }
   
+  attachResizeObserver(){
+    this.resizeObserver=new ResizeObserver((entries: ResizeObserverEntry[])=> {
+      for(const entry of entries){
+        const {width, height}=entry.contentRect
+        this.lastDimension={width, height}
+        emitter.emit("elementResize", {
+          target: entry.target,
+          ...this.lastDimension
+        })
+      }
+    })
+  }
+  
+  observeCanvas(elements: Element[]){
+    elements.forEach(elem=> {
+      this.resizeObserver?.observe(elem)
+    })
+  }
+  
+  detachResizeObserver(){
+    this.resizeObserver?.disconnect()
+    this.resizeObserver=null
+  }
+  
   bindEvents(){
+    const inst=this
     const canvas=this.canvas
-    const {minZoom, maxZoom}=this.options
+    const {minZoom, maxZoom, width: initialWidth, height: initialHeight}=this.options
     
-    canvas.on('selection:cleared', function() {
-      // canvas.setSelectedObject([])
-      console.log('clear selection')
-    })
-    canvas.on('selection:created', function(e: any) {
-      // setSelectedObject(e.selected)
-      console.log('created selection')
-    })
-    canvas.on('selection:updated', function (e: any) {
-      // setSelectedObject(e.selected)
-      console.log('update selection')
-    })
+    // canvas.on('selection:cleared', function() {
+    //   console.log('clear selection')
+    // })
+    // canvas.on('selection:created', function(e: any) {
+    //   console.log('created selection')
+    // })
+    // canvas.on('selection:updated', function (e: any) {
+    //   console.log('update selection')
+    // })
   
     // zoom and panning
     // see: http://fabricjs.com/fabric-intro-part-5#pan_zoom
     canvas.on('mouse:down', function (opt) {
       const evt=opt.e;
-      if(evt.altKey){
+      // when enable drag mode, can't select object or group
+      if(inst.canvasState.dragMode){
+        // console.log('asset canvas===this: ', canvas === this)
         this.isDragging = true;
         this.selection = false;
+        this.selectable=false
+        canvas.discardActiveObject()
         this.lastPosX = evt.clientX;
         this.lastPosY = evt.clientY;
-        // todo: change mouse style to move status
+        canvas.setCursor('grab')
       }
     })
     canvas.on('mouse:move', function (opt){
+      // this bound to canvas
       if(this.isDragging){
         const {e}=opt
         const vpt = this.viewportTransform;
@@ -104,29 +137,81 @@ export default class Canvas {
       this.setViewportTransform(this.viewportTransform);
       this.isDragging = false;
       this.selection = true;
+      this.selectable=true
     })
     canvas.on('mouse:wheel', function (opt){
       const delta = opt.e.deltaY;
-      const {offsetX, offsetY}=opt.e
-      let zoom = canvas.getZoom();
-      zoom *= 0.99 ** delta;
+      // const {offsetX, offsetY}=opt.e  // mouse point's offset
+      const vpCenter=canvas.getVpCenter() // viewpoint's center
+      const vpt=canvas.viewportTransform
+      const origZoom = canvas.getZoom();
+      let zoom = origZoom * (0.99 ** delta);
       if (zoom > maxZoom) zoom = maxZoom as number;
       if (zoom < minZoom) zoom = minZoom as number;
+  
+      if(origZoom === zoom) return;
+      
+      const panX=vpt[4]  // vpt transX
+      const panY=vpt[5]
+      // console.log('panX, panY, zoom: ', panX, panY, zoom)
+      
+      // solution-1: use css to scale canvas element
+      // canvas.wrapperEl.style.setProperty('transform', `scale(${zoom})`)
+      
+      // solution-2: use fabric to calc canvas and children dimension
+      // canvas.setDimensions({
+      //   width:  initialWidth * zoom,
+      //   height: initialHeight * zoom
+      // })
+      //
+      // // calc objects offset/scale
+      // canvas.getObjects().forEach(obj => {
+      //   const { left, top, scaleX, scaleY } = obj
+      //   console.log('obj before, scaleX, scaleY, zoom: ', obj.toJSON(), scaleX, scaleY, zoom)
+      //   if(!('origLeft' in obj)){
+      //     Object.assign(obj, {
+      //       origLeft: left,
+      //       origTop: top
+      //     })
+      //   }
+      //   obj.set({
+      //     scaleX: zoom,
+      //     scaleY: zoom,
+      //     left: obj.origLeft * zoom,
+      //     top: obj.origTop * zoom
+      //   })
+      //   obj.setCoords()
+      //   console.log('obj after: ', obj.toJSON())
+      // })
+      
+      canvas.setViewportTransform([zoom, 0, 0, zoom, panX, panY])
+      
+      // based on vp center to zoom
+      // canvas.zoomToPoint(vpCenter, zoom)
+  
+      // canvas.relativePan({x: panX, y: panY})
+      
       // make wheel-zoom to center canvas around the point where cursor is
-      canvas.zoomToPoint({x: offsetX, y: offsetY}, zoom)
+      // canvas.zoomToPoint({x: offsetX, y: offsetY}, zoom)
+  
+      emitter.emit('zoomChange', zoom)
+  
       opt.e.preventDefault();
       opt.e.stopPropagation();
-      // console.log("cur zoom, vpTransform, canWid, canHei: ", zoom, this.viewportTransform, canvas.getWidth(), canvas.getHeight())
+      
+      // canvas.requestRenderAll()
+      // canvas.calcOffset()
     })
   }
 
   addText(text: string) {
     // use stroke in text fill, fill default is most of the time transparent
-    const object = new fabric.Textbox(text, { 
+    const object = new fabric.Textbox(text, {
       ...TEXT, 
       fill: this.options.strokeColor
     })
     object.set({ text: text })
+    // this.canvas.viewportCenterObject(object)
     this.canvas.add(object)
   }
 
@@ -137,6 +222,8 @@ export default class Canvas {
       if(img.width > 256){
         img.scale(0.5)
       }
+      this.canvas.centerObject(img)
+      this.canvas.setActiveObject(img)
       this.canvas.add(img)
     })
   }
@@ -221,20 +308,26 @@ export default class Canvas {
   zoomIn(){
     const {maxZoom, zoomStep}=this.options
     const zoom = this.canvas.getZoom()
-    const toScale=zoom + zoomStep > maxZoom ? maxZoom : zoom + zoomStep
-    this.canvas.zoomToPoint({
-      x: this.canvas.getWidth() / 2,
-      y: this.canvas.getHeight() / 2
-    }, toScale as number)
+    const scale=zoom + zoomStep > maxZoom ? maxZoom : zoom + zoomStep
+    const vpt=this.canvas.viewportTransform
+    this.canvas.setViewportTransform([scale, 0, 0, scale, vpt[4], vpt[5]])
+    // this.canvas.zoomToPoint(this.canvas.getVpCenter(), scale as number)
   }
   
   zoomOut() {
     const {minZoom, zoomStep}=this.options
     const zoom = this.canvas.getZoom()
-    const toScale = zoom - zoomStep < minZoom ? minZoom : zoom - zoomStep
-    this.canvas.zoomToPoint({
-      x: this.canvas.getWidth() / 2,
-      y: this.canvas.getHeight() / 2
-    }, toScale as number)
+    const scale = zoom - zoomStep < minZoom ? minZoom : zoom - zoomStep
+    const vpt=this.canvas.viewportTransform
+    this.canvas.setViewportTransform([scale, 0, 0, scale, vpt[4], vpt[5]])
+    // this.canvas.zoomToPoint(this.canvas.getVpCenter(), scale as number)
+  }
+  
+  zoomFit(){
+    // see: http://fabricjs.com/docs/fabric.StaticCanvas.html#viewportTransform
+    // transformation matrix: [scaleX, skewY, skewX, scaleY, translateX, translateY]
+    // const vpt=this.canvas.viewportTransform
+    this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0])
+    // this.canvas.zoomToPoint(this.canvas.getVpCenter(), 1)
   }
 }
