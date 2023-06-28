@@ -3,6 +3,7 @@
     font-size: 14px;
   }
   > button {
+    box-sizing: border-box;
     display: flex;
     justify-content: flex-start;
     > svg {
@@ -10,4 +11,13 @@
       margin-right: 5px;
     }
   }
+}
+
+.active {
+  background-color: var(--blue-100);
+  border: 1px solid var(--blue-200);
+}
+
+.notActive {
+  background-color: transparent;
 }

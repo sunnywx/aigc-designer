@@ -50,7 +50,7 @@ export default class Canvas {
       ...this.lastDimension,
       backgroundColor: '#f5f5f5',
       fillColor: '#143ab8',
-      strokeColor: '#000',
+      strokeColor: '#000000',
       textAlign: 'left',
       fontFamily: "arial",
       zoomStep: 0.2,
@@ -261,51 +261,134 @@ export default class Canvas {
   }
 
   addArrow(){
-    // Create a custom arrow object
-    var Arrow = fabric.util.createClass(fabric.Object, {
-      type: 'arrow',
+    fabric.LineArrow = fabric.util.createClass(fabric.Line, {
 
-      initialize: function(options) {
-        options = options || {};
-        this.callSuper('initialize', options);
-      },
-
-      drawArrow: function(ctx) {
-        var startX = -this.width / 2;
-        var startY = 0;
-        var endX = this.width / 2;
-        var endY = 0;
-        var arrowWidth = this.height / 2;
-        var arrowHeight = this.height;
+      type: 'lineArrow',
     
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(endX - arrowWidth, startY);
-        ctx.lineTo(endX, -arrowHeight / 2);
-        ctx.lineTo(endX - arrowWidth, -arrowHeight);
-        ctx.lineTo(startX, -arrowHeight);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
+      initialize: function(element, options) {
+        options || (options = {});
+        this.callSuper('initialize', element, options);
+      },
+    
+      toObject: function() {
+        return fabric.util.object.extend(this.callSuper('toObject'));
       },
     
       _render: function(ctx) {
+        this.callSuper('_render', ctx);
+    
+        // do not render if width/height are zeros or object is not visible
+        if (this.width === 0 || this.height === 0 || !this.visible) return;
+    
         ctx.save();
-        ctx.translate(-this.width / 2, 0);
-        this.drawArrow(ctx);
+    
+        var xDiff = this.x2 - this.x1;
+        var yDiff = this.y2 - this.y1;
+        var angle = Math.atan2(yDiff, xDiff);
+        ctx.translate((this.x2 - this.x1) / 2, (this.y2 - this.y1) / 2);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        //move 10px in front of line to start the arrow so it does not have the square line end showing in front (0,0)
+        ctx.moveTo(10, 0);
+        ctx.lineTo(-20, 15);
+        ctx.lineTo(-20, -15);
+        ctx.closePath();
+        ctx.fillStyle = this.stroke;
+        ctx.fill();
+    
         ctx.restore();
+    
       }
     });
-
-    var arrow = new Arrow({
-      left: 100, // X position of the line
-      top: 100, // Y position of the line
-      width: 200, // Length of the line
-      height: 30, // Thickness of the line
-      fill: this.options.fillColor // Fill color of the arrow
-    });
-
-    this.canvas.add(arrow)
+    
+    fabric.LineArrow.fromObject = function(object, callback) {
+      callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
+    };
+    
+    fabric.LineArrow.async = true;
+    
+    
+    var Arrow = (function() {
+      function Arrow(canvas) {
+        this.canvas = canvas;
+        this.className = 'Arrow';
+        this.isDrawing = false;
+        this.bindEvents();
+      }
+    
+      Arrow.prototype.bindEvents = function() {
+        var inst = this;
+        inst.canvas.on('mouse:down', function(o) {
+          inst.onMouseDown(o);
+        });
+        inst.canvas.on('mouse:move', function(o) {
+          inst.onMouseMove(o);
+        });
+        inst.canvas.on('mouse:up', function(o) {
+          inst.onMouseUp(o);
+        });
+        inst.canvas.on('object:moving', function(o) {
+          inst.disable();
+        })
+      }
+    
+      Arrow.prototype.onMouseUp = function(o) {
+        var inst = this;
+        inst.disable();
+      };
+    
+      Arrow.prototype.onMouseMove = function(o) {
+        var inst = this;
+        if (!inst.isEnable()) {
+          return;
+        }
+    
+        var pointer = inst.canvas.getPointer(o.e);
+        var activeObj = inst.canvas.getActiveObject();
+        activeObj.set({
+          x2: pointer.x,
+          y2: pointer.y
+        });
+        activeObj.setCoords();
+        inst.canvas.renderAll();
+      };
+    
+      Arrow.prototype.onMouseDown = function(o) {
+        var inst = this;
+        inst.enable();
+        var pointer = inst.canvas.getPointer(o.e);
+    
+        var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+        var line = new fabric.LineArrow(points, {
+          strokeWidth: 1,
+          fill: '#000',
+          stroke: '#000',
+          originX: 'center',
+          originY: 'center',
+          hasBorders: false,
+          hasControls: false
+        });
+    
+        inst.canvas.add(line).setActiveObject(line);
+      };
+    
+      Arrow.prototype.isEnable = function() {
+        return this.isDrawing;
+      }
+    
+      Arrow.prototype.enable = function() {
+        this.isDrawing = true;
+      }
+    
+      Arrow.prototype.disable = function() {
+        this.isDrawing = false;
+      }
+    
+      return Arrow;
+    }());
+    
+    var arrow = new Arrow(this.canvas);
+    return arrow;
   }
   
   addCircle(){
