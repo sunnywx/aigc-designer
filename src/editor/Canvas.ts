@@ -1,7 +1,7 @@
 import _ from "lodash"
 import { ValueOf } from "next/constants";
 import { fabric } from "fabric";
-import { CIRCLE, LINE, RECTANGLE, TEXT } from "@/editor/config/shapes";
+import { CIRCLE, LINE, RECTANGLE, TRIANGLE, TEXT } from "@/editor/config/shapes";
 import {emitter} from '@/editor/ctx'
 import {debounce} from 'lodash'
 import { TextOptions } from "fabric/fabric-impl";
@@ -259,6 +259,54 @@ export default class Canvas {
     })
     this.canvas.add(object)
   }
+
+  addArrow(){
+    // Create a custom arrow object
+    var Arrow = fabric.util.createClass(fabric.Object, {
+      type: 'arrow',
+
+      initialize: function(options) {
+        options = options || {};
+        this.callSuper('initialize', options);
+      },
+
+      drawArrow: function(ctx) {
+        var startX = -this.width / 2;
+        var startY = 0;
+        var endX = this.width / 2;
+        var endY = 0;
+        var arrowWidth = this.height / 2;
+        var arrowHeight = this.height;
+    
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX - arrowWidth, startY);
+        ctx.lineTo(endX, -arrowHeight / 2);
+        ctx.lineTo(endX - arrowWidth, -arrowHeight);
+        ctx.lineTo(startX, -arrowHeight);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      },
+    
+      _render: function(ctx) {
+        ctx.save();
+        ctx.translate(-this.width / 2, 0);
+        this.drawArrow(ctx);
+        ctx.restore();
+      }
+    });
+
+    var arrow = new Arrow({
+      left: 100, // X position of the line
+      top: 100, // Y position of the line
+      width: 200, // Length of the line
+      height: 30, // Thickness of the line
+      fill: this.options.fillColor // Fill color of the arrow
+    });
+
+    this.canvas.add(arrow)
+  }
   
   addCircle(){
     const object = new fabric.Circle({
@@ -279,13 +327,14 @@ export default class Canvas {
   }
   
   addTriangle(){
-  
+    const object = new fabric.Triangle({
+      ...TRIANGLE,
+      fill: this.options.fillColor,
+      stroke: this.options.strokeColor
+    })
+    this.canvas.add(object)
   }
-  
-  addArrow(){
-  
-  }
-  
+
   addProperty(propertyId: string){
   
   }

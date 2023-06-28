@@ -1,3 +1,13 @@
-.wrap {
-
+.shapesWrapper {
+  span {
+    font-size: 14px;
+  }
+  > button {
+    display: flex;
+    justify-content: flex-start;
+    > svg {
+      width: 20px;
+      margin-right: 5px;
+    }
+  }
 }
