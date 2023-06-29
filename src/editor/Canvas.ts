@@ -5,6 +5,8 @@ import { CIRCLE, LINE, RECTANGLE, TRIANGLE, TEXT } from "@/editor/config/shapes"
 import {emitter} from '@/editor/ctx'
 import {debounce} from 'lodash'
 import { TextOptions } from "fabric/fabric-impl";
+import React from "react";
+import ReactDOMServer from 'react-dom/server';
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
   fillColor?: string;
@@ -423,11 +425,38 @@ export default class Canvas {
     this.canvas.add(object)
   }
 
-  addProperty(propertyId: string){
+  addIcon(IconComponent) {
+    const iconElement = React.createElement(IconComponent, { size: 40 });
+    const iconSVG = ReactDOMServer.renderToString(iconElement);
   
+    fabric.loadSVGFromString(iconSVG, (objects, options) => {
+      const iconObj = fabric.util.groupSVGElements(objects, options);
+      iconObj.set({
+        left: 50,
+        top: 50,
+        fill: this.options.fillColor,
+        stroke: this.options.strokeColor
+      });
+      this.canvas.add(iconObj);
+      this.canvas.renderAll();
+    });
   }
-  
-  addIcon(iconName: string){
+  // addIcon(IconComponent){
+  //   const iconSVG = IconComponent({ size: 40 }); // Adjust the size as per your requirements
+  //   const svgString = new XMLSerializer().serializeToString(iconSVG);
+
+  //   fabric.loadSVGFromString(svgString, (objects, options) => {
+  //     const iconObj = fabric.util.groupSVGElements(objects, options);
+  //     iconObj.set({
+  //       left: 50,
+  //       top: 50,
+  //     });
+  //     this.canvas.add(iconObj);
+  //     this.canvas.renderAll();
+  //   });
+  // }
+
+  addProperty(propertyId: string){
   
   }
   

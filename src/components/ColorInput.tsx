@@ -5,7 +5,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 interface Props {
   value?: string;
   onChange: Dispatch<SetStateAction<string>>;
-  changeHandler: () => void;
+  changeHandler: (color: string) => void;
 }
 
 export const ColorInput = ({ value, onChange, changeHandler }: Props) => {
@@ -16,16 +16,15 @@ export const ColorInput = ({ value, onChange, changeHandler }: Props) => {
       <input
         type='color'
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => changeHandler(e.target.value)}
         className={classes.colorInput}
         />
       <input
         type='text'
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => changeHandler(e.target.value)}
         className={classes.textInput}
       />
-      <Button className={classes.colorButton} size="small" onClick={changeHandler}>Apply</Button>
     </div>
   )
 }
@@ -36,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     position: "relative",
     alignItems: "center",
     border: "1px solid var(--blue-300)",
+    height: "30px",
     borderRadius: 4,
     "&:hover": {
       borderColor: "var(--blue-500)"

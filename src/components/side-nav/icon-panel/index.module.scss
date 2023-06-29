@@ -1,3 +1,15 @@
-.wrap {
-
+.iconPanelWrapper {
+  .iconContentContainer {
+    margin-top: 20px;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    > button {
+      min-width: 40px !important;
+      min-height: 50px !important;
+      padding: 10px;
+      &:hover {
+        background-color: var(--blue-200);
+      }
+    }
+  }
 }
