@@ -20,11 +20,11 @@ export default function PropsPanel({canvas, selectedType}: Props) {
   const [fillColor, setFillColor] = useState('')
   const {canvasState}=useEditor()
   
-  const onSetStrokeColor = () => {
-    canvas?.setStrokeColor(strokeColor)
+  const onSetStrokeColor = (color: string) => {
+    canvas?.setStrokeColor(color)
   }
-  const onSetFillColor = () => {
-    canvas?.setFillColor(fillColor)
+  const onSetFillColor = (color: string) => {
+    canvas?.setFillColor(color)
   }
   
   const onDeleteAll = () => {
@@ -113,9 +113,9 @@ export default function PropsPanel({canvas, selectedType}: Props) {
               <Typography component="p" fontSize="14px">Size in px</Typography>
             </Box>
           </div>
+          <Typography variant="caption">Stroke color</Typography>
+          <ColorInput value={strokeColor || canvas.options.strokeColor} onChange={setStrokeColor} changeHandler={onSetStrokeColor} />
         </>}
-        <Typography variant="caption">Stroke color</Typography>
-        <ColorInput value={strokeColor || canvas.options.strokeColor} onChange={setStrokeColor} changeHandler={onSetStrokeColor} />
         <Typography variant="caption">Fill color</Typography>
         <ColorInput value={fillColor || canvas.options.fillColor} onChange={setFillColor} changeHandler={onSetFillColor} />
         
