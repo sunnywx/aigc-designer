@@ -18,8 +18,11 @@ import { FaShapes } from "react-icons/fa";
 
 import styles from './index.module.scss';
 import { MdInsertPhoto } from 'react-icons/md';
-import { GrTemplate } from 'react-icons/gr';
 import { TfiLayoutPlaceholder } from 'react-icons/tfi';
+import { TbLetterI } from 'react-icons/tb';
+import { AiTwotoneSetting } from 'react-icons/ai';
+import { FaPalette } from 'react-icons/fa';
+import { HiTemplate } from 'react-icons/hi';
 
 interface Props {
   className?: string;
@@ -102,9 +105,13 @@ export default function SideNav(props: Props) {
       case "photo":
         return <MdInsertPhoto />
       case "template":
-        return <GrTemplate />
+        return <HiTemplate />
       case "property":
-        return <TfiLayoutPlaceholder />
+        return <AiTwotoneSetting />
+      case "icon":
+        return <TbLetterI />
+      case "logo":
+        return <FaPalette />
       default:
         return <TfiLayoutPlaceholder />
     }
