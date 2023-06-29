@@ -241,14 +241,16 @@ export default class Canvas {
 
   addImage(url: string) {
     fabric.Image.fromURL(url, img=> {
-      // console.log('load img: ', img)
+      console.log('load img, w/h: ', img, img.width, img.height)
       // transform img
-      if(img.width > 256){
+      if(Math.max(img.width!, img.height!) > 256){
         img.scale(0.5)
       }
       this.canvas.centerObject(img)
       this.canvas.setActiveObject(img)
       this.canvas.add(img)
+    }, {
+      crossOrigin: "Anonymous"
     })
   }
   

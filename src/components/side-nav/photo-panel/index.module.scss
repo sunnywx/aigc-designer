@@ -1,3 +1,23 @@
 .wrap {
 
+  .images {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+
+    .item {
+      border: 1px solid #ccc;
+      min-width: 80px;
+      min-height: 80px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--indigo-300);
+        opacity: .5;
+      }
+    }
+  }
 }
