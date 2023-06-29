@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": "14"
+    "node": "14.x"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -23,12 +23,11 @@
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
     "axios": "^1.4.0",
-    "canvas": "2.6.1",
     "classnames": "^2.3.2",
     "dotenv": "^16.3.1",
     "eslint": "8.22.0",
     "eslint-config-next": "13.3.1",
-    "fabric": "^5.3.0",
+    "fabric": "5.0.0",
     "fontfaceobserver": "^2.3.0",
     "formik": "^2.4.2",
     "https-proxy-agent": "^7.0.0",
@@ -51,5 +50,8 @@
     "@types/fabric": "^5.3.3",
     "@types/lodash": "^4.14.195",
     "@types/react-color": "^3.0.6"
+  },
+  "resolutions": {
+    "canvas": "2.6.1"
   }
 }
