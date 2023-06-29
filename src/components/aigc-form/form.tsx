@@ -46,7 +46,6 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
     validateOnBlur: true,
     enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
-      // console.log('form data: ', values)
       setSubmitting(true)
       
       try {

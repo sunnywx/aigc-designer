@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Configuration, OpenAIApi, CreateImageRequestSizeEnum } from "openai";
 import {HttpsProxyAgent} from "https-proxy-agent";
+import axios from "axios";
 
 const conf = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -37,7 +38,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       httpAgent: proxy,
       httpsAgent: proxy
     } : {});
-    res.status(200).json({result: response.data.data});
+  
+    // convert image url to base64 to prevent client side cors error
+    const imgUrls=response.data.data.map(async ({url})=> {
+      const {data}=await axios.get(url, {responseType: 'arraybuffer'})
+      const b64=`data:image/png;base64,${data.toString('base64')}`
+      return {url: b64}
+    })
+    res.status(200).json({result: await Promise.all(imgUrls)});
   } catch (error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {

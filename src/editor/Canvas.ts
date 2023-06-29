@@ -248,6 +248,7 @@ export default class Canvas {
       this.canvas.setActiveObject(img)
       this.canvas.add(img)
     }, {
+      // in order to export image data url
       crossOrigin: "Anonymous"
     })
   }
