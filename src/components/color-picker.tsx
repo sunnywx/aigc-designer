@@ -30,7 +30,7 @@ export default function ColorPicker({ title = 'Pick color', className, onPick }:
   }
   
   return (
-    <div className={cs(classes.wrap, className)} ref={wrapRef}>
+    <div className={cs(classes.wrap, className)} ref={wrapRef as any}>
       <Button
         fullWidth
         variant='contained'

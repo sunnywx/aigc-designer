@@ -41,7 +41,7 @@ export default function Topbar() {
               <ActionButton icon={<FaCode />} title='View schema' onClick={()=> setSchemaOpen(true)}/>
               <ActionButton title='Preview'>
                 <Switch
-                  color='purple'
+                  color={'purple' as any}
                   value={canvasState.preview}
                   onChange={e=> setCanvasState(prev=> ({...prev, preview : e.target.checked}))}
                 />

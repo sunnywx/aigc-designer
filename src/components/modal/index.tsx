@@ -33,7 +33,7 @@ export default function Modal({
   fullScreen=false,
   fullWidth=false
 }: Props) {
-  function handleClose(ev, reason){
+  function handleClose(ev: any, reason: string){
     if (reason && reason == "backdropClick"){
       return;
     }

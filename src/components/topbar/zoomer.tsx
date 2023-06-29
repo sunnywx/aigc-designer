@@ -13,6 +13,7 @@ interface Props {
 export default function Zoomer(props: Props) {
   const { canvas, emitter, canvasState, setCanvasState } = useEditor()
   const zoomLabel=useMemo(()=> {
+    // @ts-ignore
     return (parseInt(String((canvasState.zoom || 1)?.toFixed(2) * 100))) + '%'
   }, [canvasState.zoom])
   const [mode, setMode]=useState<'select' | 'drag'>('select')
@@ -23,6 +24,7 @@ export default function Zoomer(props: Props) {
   
   useEffect(()=> {
     // listen to zoom-change event
+    // @ts-ignore
     emitter.on('zoomChange', syncZoom)
   }, [])
   

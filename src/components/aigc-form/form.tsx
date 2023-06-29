@@ -54,7 +54,7 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
         // await sleep(1000)
         // setImages(mockImages)
         
-        const resp=await axios.post<{}, {result: ImageItem[]}>('/api/text2img/openai', {
+        const resp: any=await axios.post<{}, {result: ImageItem[]}>('/api/text2img/openai', {
           p: values.prompt,
           size: values.size,
           count: values.count
@@ -62,7 +62,7 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
           timeout: 1000 * 20 // 20s
         })
         setImages(resp.data.result)
-      } catch (error) {
+      } catch (error: any) {
         if (error.response) {
           enqueueSnackbar(error.response.statusText, { variant: 'error' })
         } else {
@@ -98,7 +98,7 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
       footer={(
         <div>
           <Button
-            onClick={handleSubmit}
+            onClick={handleSubmit as any}
             form='aigc-form'
             disabled={isSubmitting}
             variant='contained'
@@ -172,6 +172,7 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
               {images.map(({url}, idx) => {
                 return (
                   <div
+                    key={url}
                     className={cs(styles.imgItem, {[styles.selected]: selectedImages.includes(url)})}
                     onClick={()=> setSelectedImages(prevImages=> {
                       if(prevImages.includes(url)){
@@ -185,7 +186,6 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
                       loading='lazy'
                       src={url}
                       alt=""
-                      key={url}
                     />
                     {selectedImages.includes(url) && <div className={styles.mask}><BsCheck2Circle /></div>}
                   </div>

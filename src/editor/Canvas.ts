@@ -21,12 +21,12 @@ export interface CanvasOptions extends fabric.ICanvasOptions {
 export default class Canvas {
   el: HTMLCanvasElement;
   canvas: fabric.Canvas;
-  ctx: CanvasRenderingContext2D;
+  ctx: CanvasRenderingContext2D | null;
   options: CanvasOptions;
   resizeObserver: ResizeObserver | null;
   lastDimension: {width: number, height: number};
   
-  constructor(el: string | HTMLCanvasElement, passedOptions={}) {
+  constructor(el: string | HTMLCanvasElement, options={}) {
     if (typeof el === 'string') {
       let canElem = document.getElementById(el)
       if (!canElem) {
@@ -46,7 +46,8 @@ export default class Canvas {
       width: 600,
       height: 650,
     }
-    this.options=_.defaults(this.options, passedOptions, {
+    // @ts-ignore
+    this.options=_.defaults(this.options, options, {
       ...this.lastDimension,
       backgroundColor: '#f5f5f5',
       fillColor: '#143ab8',
@@ -60,19 +61,7 @@ export default class Canvas {
     
     this.canvas=new fabric.Canvas(this.el,
       _.pick(this.options, ['width', 'height', 'backgroundColor']))
-    
-    this.attachResizeObserver()
-  }
   
-  setOption(key: keyof CanvasOptions | Partial<CanvasOptions>, val?: ValueOf<CanvasOptions>) {
-    if (typeof key === 'string') {
-      this.options[key] = val;
-    } else if (typeof key === 'object') {
-      this.options = { ...this.options, ...key }
-    }
-  }
-  
-  attachResizeObserver(){
     this.resizeObserver=new ResizeObserver((entries: ResizeObserverEntry[])=> {
       for(const entry of entries){
         const {width, height}=entry.contentRect
@@ -83,6 +72,15 @@ export default class Canvas {
         })
       }
     })
+  }
+  
+  setOption(key: keyof CanvasOptions | Partial<CanvasOptions>, val?: ValueOf<CanvasOptions>) {
+    if (typeof key === 'string') {
+      // @ts-ignore
+      this.options[key] = val;
+    } else if (typeof key === 'object') {
+      this.options = { ...this.options, ...key }
+    }
   }
   
   observeCanvas(elements: Element[]){
