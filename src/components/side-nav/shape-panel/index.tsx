@@ -4,11 +4,8 @@ import { Button, Typography } from "@mui/material";
 import { BsFillTriangleFill, BsFillCircleFill } from "react-icons/bs"
 import { BiSolidRectangle } from "react-icons/bi"
 import { FaLongArrowAltRight, FaMinus } from "react-icons/fa"
-import { useRef, useState } from 'react';
 
 export default function ShapePanel() {
-  const arrowRef = useRef(null)
-  const [isToggled, setIsToggled] = useState(false)
   const {canvas}=useEditor()
   
   const onAddCircle = () => {
@@ -23,23 +20,10 @@ export default function ShapePanel() {
   const onAddLine = () => {
     canvas?.addLine()
   }
+  const onAddArrow = () => {
+    canvas?.addArrow()
+  }
 
-  const toggleArrow = () => {
-    if (arrowRef.current) {
-      arrowRef.current = null;
-      setIsToggled(false)
-    } else {
-      arrowRef.current = canvas?.addArrow()
-      setIsToggled(true)
-    }
-  };
-
-  // useEffect(() => {
-  //   if (canvas) {
-  //     arrowRef.current = canvas?.addArrow()
-  //   }
-  // }, [canvas])
-  
   return (
     <div className={styles.shapesWrapper}>
       <Typography variant='caption'>Shapes</Typography>
@@ -62,7 +46,7 @@ export default function ShapePanel() {
       </Button>
       <Button
         size="small"
-        onClick={toggleArrow}
+        onClick={onAddArrow}
         // className={isToggled ? styles.active : styles.notActive}
       >
         <FaLongArrowAltRight />
