@@ -9,4 +9,7 @@ const nextConfig = {
   }
 }
 
+// output node versions on vercel
+process.env.BUILD_MODE && console.log('node versions: ', process.versions)
+
 module.exports = nextConfig;
