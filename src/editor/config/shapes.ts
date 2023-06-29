@@ -19,6 +19,16 @@ export const RECTANGLE = {
   angle: 0
 }
 
+export const TRIANGLE = {
+  left: 100,
+  top: 100,
+  fill: FILL,
+  stroke: STROKE,
+  width: 50,
+  height: 50,
+  angle: 0
+}
+
 export const LINE = {
   points: [50, 100, 200, 200],
   options: {
