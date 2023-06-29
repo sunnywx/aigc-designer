@@ -297,98 +297,103 @@ export default class Canvas {
         ctx.fill();
     
         ctx.restore();
-    
       }
     });
+
+    const object = new fabric.LineArrow(LINE.points, {
+      ...LINE.options,
+      stroke: this.options.strokeColor
+    })
+    this.canvas.add(object)
     
-    fabric.LineArrow.fromObject = function(object, callback) {
-      callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
-    };
+    // TODO: drawing mode - for future feat
+    // fabric.LineArrow.fromObject = function(object, callback) {
+    //   callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
+    // };
     
-    fabric.LineArrow.async = true;
+    // fabric.LineArrow.async = true;
     
+    // var Arrow = (function() {
+    //   function Arrow(canvas) {
+    //     this.canvas = canvas;
+    //     this.className = 'Arrow';
+    //     this.isDrawing = false;
+    //     this.bindEvents();
+    //   }
     
-    var Arrow = (function() {
-      function Arrow(canvas) {
-        this.canvas = canvas;
-        this.className = 'Arrow';
-        this.isDrawing = false;
-        this.bindEvents();
-      }
+    //   Arrow.prototype.bindEvents = function() {
+    //     var inst = this;
+    //     inst.canvas.on('mouse:down', function(o) {
+    //       inst.onMouseDown(o);
+    //     });
+    //     inst.canvas.on('mouse:move', function(o) {
+    //       inst.onMouseMove(o);
+    //     });
+    //     inst.canvas.on('mouse:up', function(o) {
+    //       inst.onMouseUp(o);
+    //     });
+    //     inst.canvas.on('object:moving', function(o) {
+    //       inst.disable();
+    //     })
+    //   }
     
-      Arrow.prototype.bindEvents = function() {
-        var inst = this;
-        inst.canvas.on('mouse:down', function(o) {
-          inst.onMouseDown(o);
-        });
-        inst.canvas.on('mouse:move', function(o) {
-          inst.onMouseMove(o);
-        });
-        inst.canvas.on('mouse:up', function(o) {
-          inst.onMouseUp(o);
-        });
-        inst.canvas.on('object:moving', function(o) {
-          inst.disable();
-        })
-      }
+    //   Arrow.prototype.onMouseUp = function(o) {
+    //     var inst = this;
+    //     inst.disable();
+    //   };
     
-      Arrow.prototype.onMouseUp = function(o) {
-        var inst = this;
-        inst.disable();
-      };
+    //   Arrow.prototype.onMouseMove = function(o) {
+    //     var inst = this;
+    //     if (!inst.isEnable()) {
+    //       return;
+    //     }
     
-      Arrow.prototype.onMouseMove = function(o) {
-        var inst = this;
-        if (!inst.isEnable()) {
-          return;
-        }
+    //     var pointer = inst.canvas.getPointer(o.e);
+    //     var activeObj = inst.canvas.getActiveObject();
+    //     activeObj.set({
+    //       x2: pointer.x,
+    //       y2: pointer.y
+    //     });
+    //     activeObj.setCoords();
+    //     inst.canvas.renderAll();
+    //   };
     
-        var pointer = inst.canvas.getPointer(o.e);
-        var activeObj = inst.canvas.getActiveObject();
-        activeObj.set({
-          x2: pointer.x,
-          y2: pointer.y
-        });
-        activeObj.setCoords();
-        inst.canvas.renderAll();
-      };
+    //   Arrow.prototype.onMouseDown = function(o) {
+    //     var inst = this;
+    //     inst.enable();
+    //     var pointer = inst.canvas.getPointer(o.e);
     
-      Arrow.prototype.onMouseDown = function(o) {
-        var inst = this;
-        inst.enable();
-        var pointer = inst.canvas.getPointer(o.e);
+    //     var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+    //     var line = new fabric.LineArrow(points, {
+    //       strokeWidth: 1,
+    //       fill: '#000',
+    //       stroke: '#000',
+    //       originX: 'center',
+    //       originY: 'center',
+    //       hasBorders: false,
+    //       hasControls: false
+    //     });
     
-        var points = [pointer.x, pointer.y, pointer.x, pointer.y];
-        var line = new fabric.LineArrow(points, {
-          strokeWidth: 1,
-          fill: '#000',
-          stroke: '#000',
-          originX: 'center',
-          originY: 'center',
-          hasBorders: false,
-          hasControls: false
-        });
+    //     inst.canvas.add(line).setActiveObject(line);
+    //   };
     
-        inst.canvas.add(line).setActiveObject(line);
-      };
+    //   Arrow.prototype.isEnable = function() {
+    //     return this.isDrawing;
+    //   }
     
-      Arrow.prototype.isEnable = function() {
-        return this.isDrawing;
-      }
+    //   Arrow.prototype.enable = function() {
+    //     this.isDrawing = true;
+    //   }
     
-      Arrow.prototype.enable = function() {
-        this.isDrawing = true;
-      }
+    //   Arrow.prototype.disable = function() {
+    //     this.isDrawing = false;
+    //   }
     
-      Arrow.prototype.disable = function() {
-        this.isDrawing = false;
-      }
+    //   return Arrow;
+    // }());
     
-      return Arrow;
-    }());
-    
-    var arrow = new Arrow(this.canvas);
-    return arrow;
+    // var arrow = new Arrow(this.canvas);
+    // return arrow;
   }
   
   addCircle(){

@@ -60,7 +60,11 @@ export default function ShapePanel() {
         <FaMinus />
         <Typography variant='caption' textTransform="capitalize">line</Typography>
       </Button>
-      <Button size="small" onClick={toggleArrow} className={isToggled ? styles.active : styles.notActive}>
+      <Button
+        size="small"
+        onClick={toggleArrow}
+        // className={isToggled ? styles.active : styles.notActive}
+      >
         <FaLongArrowAltRight />
         <Typography variant='caption' textTransform="capitalize">arrow</Typography>
       </Button>
