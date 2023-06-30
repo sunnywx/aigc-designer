@@ -1,7 +1,9 @@
 AIGC designer
 ==
 
-> AI powered low-code page designer(brand, postcard, etc)
+> AI powered brand/postcard designer
+
+![demo output](./demo.png)
 
 ## Develop
 
@@ -43,8 +45,8 @@ yarn start
 
 ## Deploy
 
+- Vercel (default)
 - Docker-compose
-- Vercel
 - AWS serverless
 
 
