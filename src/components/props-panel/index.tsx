@@ -49,27 +49,7 @@ export default function PropsPanel({canvas, selectedType}: Props) {
     "Impact"
   ];
 
-  // const getList = () => {
-  //   // 不改原数组 反转
-  //   return [
-  //     ...canvas.c.getObjects().filter((item) => {
-  //       // 过滤掉辅助线
-  //       return !(item instanceof fabric.GuideLine || item.id === 'workspace');
-  //     }),
-  //   ]
-  //     .reverse()
-  //     .map((item) => {
-  //       const { type, id, name, text } = item;
-  //       return {
-  //         type,
-  //         id,
-  //         name,
-  //         text,
-  //       };
-  //     });
-  // };
   const getIcon = (item: {type: string, name: string}) => {
-    console.log("index.tsx ~ line 71: item.name.:", item.name.split("-")[0]);
     switch (item.type) {
       case "text":
         return <TbLetterT />
