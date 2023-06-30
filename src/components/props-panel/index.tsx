@@ -5,7 +5,8 @@ import { useState } from "react";
 // import ColorPicker from '@/components/color-picker'
 import Panel from '@/components/panel'
 import { ColorInput } from '../ColorInput';
-import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight, FaHashtag } from 'react-icons/fa';
+import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight, FaHashtag, FaLongArrowAltRight, FaMinus } from 'react-icons/fa';
+import { TbLetterT } from 'react-icons/tb';
 import { makeStyles } from '@mui/styles';
 import cs from 'classnames'
 import { BsFillCircleFill, BsFillTriangleFill } from 'react-icons/bs';
@@ -70,6 +71,8 @@ export default function PropsPanel({canvas, selectedType}: Props) {
   const getIcon = (item: {type: string, name: string}) => {
     console.log("index.tsx ~ line 71: item.name.:", item.name.split("-")[0]);
     switch (item.type) {
+      case "text":
+        return <TbLetterT />
       case "circle":
         return <BsFillCircleFill />
       case "rectangle":
@@ -80,6 +83,10 @@ export default function PropsPanel({canvas, selectedType}: Props) {
         return <MdInsertPhoto />
       case "icon":
         return <FaHashtag />
+      case "line":
+        return <FaMinus />
+      case "arrow":
+        return <FaLongArrowAltRight />
       default:
         return <TfiLayoutPlaceholder />
     }
