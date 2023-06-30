@@ -34,6 +34,7 @@ export default function Editor({
   const canvasEl = useRef<HTMLCanvasElement | null>(null)
   const canvasElParent = useRef<HTMLDivElement | null>(null)
   const [sourcePanelOpen, setSourcePanelOpen]=useState(false)
+  const [canvasObjects, setCanvasObjects] = useState([])
   const [canvasState, setCanvasState]=useState<CanvasState>({
     zoom: 1,
     dragMode: false,
@@ -45,10 +46,15 @@ export default function Editor({
   function getSelectedType(type: string) {
     setselectedType(type || undefined);
   }
+
+  function getCanvasObjects(obj: any) {
+    setCanvasObjects(obj)
+  }
   
   useEffect(() => {
     const canvas = new Canvas(canvasEl.current!, {
-      getSelectedType
+      getSelectedType,
+      getCanvasObjects
     })
     setCanvas(canvas);
     
@@ -88,14 +94,17 @@ export default function Editor({
         setPanelOpen: setSourcePanelOpen,
         emitter,
         canvasState,
-        setCanvasState
+        setCanvasState,
+        canvasObjects,
+        setCanvasObjects,
+        getCanvasObjects
       }}
     >
       <div className={cs(styles.wrap, className)}>
         {!canvas && <Loading />}
         {canvas && renderTopbar?.(canvas!)}
         <div className={cs(styles.main, mainClassName)}>
-          <ObjectHandlers />
+          {(!canvas || canvasState.preview || canvas.canvas.getActiveObjects().length === 0) ? null : <ObjectHandlers />}
           {canvas && renderLeftPanel?.(canvas)}
           <div
             ref={canvasElParent as LegacyRef<any>}

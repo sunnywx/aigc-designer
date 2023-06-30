@@ -16,13 +16,19 @@ export const ColorInput = ({ value, onChange, changeHandler }: Props) => {
       <input
         type='color'
         value={value}
-        onChange={(e) => changeHandler(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value)
+          changeHandler(e.target.value)
+        }}
         className={classes.colorInput}
         />
       <input
         type='text'
         value={value}
-        onChange={(e) => changeHandler(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value)
+          changeHandler(e.target.value)
+        }}
         className={classes.textInput}
       />
     </div>

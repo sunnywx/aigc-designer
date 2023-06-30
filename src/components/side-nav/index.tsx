@@ -18,7 +18,6 @@ import { FaShapes } from "react-icons/fa";
 import styles from './index.module.scss';
 import { MdInsertPhoto } from 'react-icons/md';
 import { TfiLayoutPlaceholder } from 'react-icons/tfi';
-import { TbLetterI } from 'react-icons/tb';
 import { AiTwotoneSetting } from 'react-icons/ai';
 import { FaPalette } from 'react-icons/fa';
 import { HiTemplate } from 'react-icons/hi';

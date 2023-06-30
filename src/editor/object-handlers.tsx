@@ -7,21 +7,51 @@ import {BiChevronsDown, BiChevronsUp, BiArrowToTop, BiArrowToBottom } from 'reac
 import styles from './style.module.scss'
 
 interface Props {
-  className?: string
+  className?: string;
 }
 
 export default function ObjectHandlers({className}: Props) {
-  const {canvas, canvasState}=useEditor()
+  const {canvas, canvasState, canvasObjects, setCanvasObjects}=useEditor()
   
-  if(!canvas || canvasState.preview || canvas.canvas.getActiveObjects().length === 0) return null;
+  if(canvasObjects && canvasObjects.length === 0) return null;
   
   return (
     <div className={cs(styles.handlers, className)}>
-      <ActionButton title='Bring to top layer' icon={<BiArrowToTop />} onClick={()=> canvas.canvas?.getActiveObject()?.bringToFront()}/>
-      <ActionButton title='Send to bottom layer' icon={<BiArrowToBottom />} onClick={()=> canvas.canvas?.getActiveObject()?.sendToBack()}/>
-      <ActionButton title='Bring layer up' icon={<BiChevronsUp />} onClick={()=> canvas.canvas?.getActiveObject()?.bringForward()}/>
-      <ActionButton title='Send layer down' icon={<BiChevronsDown />} onClick={()=> canvas.canvas?.getActiveObject()?.sendBackwards()}/>
-      <ActionButton title='Delete' icon={<MdOutlineDeleteOutline />} onClick={()=> canvas?.deleteSelected()}/>
+      <ActionButton
+        title='Bring to top layer' icon={<BiArrowToTop />}
+        onClick={()=> {
+          canvas!.canvas?.getActiveObject()?.bringToFront()
+          setCanvasObjects(canvas!.canvas.getObjects())
+        }}
+      />
+      <ActionButton
+        title='Send to bottom layer' icon={<BiArrowToBottom />}
+        onClick={()=> {
+          canvas!.canvas?.getActiveObject()?.sendToBack()
+          setCanvasObjects(canvas!.canvas.getObjects())
+        }}
+      />
+      <ActionButton
+        title='Bring layer up' icon={<BiChevronsUp />}
+        onClick={()=> {
+          canvas!.canvas?.getActiveObject()?.bringForward()
+          setCanvasObjects(canvas!.canvas.getObjects())
+        }}
+      />
+      <ActionButton
+        title='Send layer down' icon={<BiChevronsDown />}
+        onClick={()=> {
+          canvas!.canvas?.getActiveObject()?.sendBackwards()
+          setCanvasObjects(canvas!.canvas.getObjects())
+        }}
+      />
+      <ActionButton
+        title='Delete' icon={<MdOutlineDeleteOutline />}
+        onClick={()=> {
+          canvas?.deleteSelected()
+          setCanvasObjects(canvas!.canvas.getObjects())
+        }}
+      />
     </div>
   );
 }
