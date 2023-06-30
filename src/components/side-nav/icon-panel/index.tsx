@@ -19,9 +19,6 @@ export default function IconPanel() {
   icons2.length = 100;
   return (
     <div className={styles.iconPanelWrapper}>
-      <Typography variant='body1'>
-        Icons
-      </Typography>
       <div className={styles.iconContentContainer}>
         {icons2.map((icon, index) => (
           <Tooltip

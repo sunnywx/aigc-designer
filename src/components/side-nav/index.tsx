@@ -8,7 +8,6 @@ import { categories } from './config'
 import TextPanel from './text-panel'
 import PhotoPanel from './photo-panel'
 import ShapePanel from './shape-panel'
-import AIImagePanel from './ai-panel'
 import PropertyPanel from './property-panel'
 import TemplatePanel from './template-panel'
 import IconPanel from './icon-panel'
@@ -90,9 +89,6 @@ export default function SideNav(props: Props) {
     if (active === 'logo') {
       return <LogoPanel />
     }
-    if (active === 'ai') {
-      return <AIImagePanel />
-    }
     return null;
   }
 
@@ -109,7 +105,7 @@ export default function SideNav(props: Props) {
       case "property":
         return <AiTwotoneSetting />
       case "icon":
-        return <TbLetterI />
+        return <FaPalette />
       case "logo":
         return <FaPalette />
       default:
@@ -119,8 +115,9 @@ export default function SideNav(props: Props) {
   
   return (
     <div ref={panelRef} style={{
-      position: 'relative',
-      height: 'max-content',
+      position: 'absolute',
+      left: '10px',
+      height: 'calc(100% - 60px)',
       visibility: canvasState.preview ? 'hidden' : 'visible'
     }}>
       <div className={styles.nav}>

@@ -2,7 +2,7 @@ import {Canvas, useEditor} from '@/editor'
 import styles from './style.module.scss'
 import { Box, Button, Divider, IconButton, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import ColorPicker from '@/components/color-picker'
+// import ColorPicker from '@/components/color-picker'
 import Panel from '@/components/panel'
 import { ColorInput } from '../ColorInput';
 import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight } from 'react-icons/fa';
@@ -25,13 +25,6 @@ export default function PropsPanel({canvas, selectedType}: Props) {
   }
   const onSetFillColor = (color: string) => {
     canvas?.setFillColor(color)
-  }
-  
-  const onDeleteAll = () => {
-    canvas?.deleteAll()
-  }
-  const onDeleteSelected = () => {
-    canvas?.deleteSelected()
   }
 
   const fontArr: string[] = [
@@ -118,13 +111,6 @@ export default function PropsPanel({canvas, selectedType}: Props) {
         </>}
         <Typography variant="caption">Fill color</Typography>
         <ColorInput value={fillColor || canvas.options.fillColor} onChange={setFillColor} changeHandler={onSetFillColor} />
-        
-        <Divider color="primary" />
-        
-        <Button variant="contained" size="small" onClick={onDeleteAll}>Delete All</Button>
-        <Button variant="contained" size="small" onClick={onDeleteSelected}>Delete Selected</Button>
-        
-        <ColorPicker onPick={color=> console.log('pick color: ', color)}/>
       </div>
     </Panel>
   );

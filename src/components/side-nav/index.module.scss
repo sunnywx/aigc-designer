@@ -56,7 +56,10 @@
 }
 
 .panel {
-  position: absolute !important;
+  position: absolute;
+  //max-height: calc(100vh - 60px);
+  height: unset;
+
   &.preview {
     visibility: hidden;
     transition: none;

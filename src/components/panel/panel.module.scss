@@ -13,6 +13,7 @@
   border-radius: 8px;
   min-width: 200px;
   height: auto;
+  max-height: 700px;
 
   &.closed {
     transform: translateX(-999px) !important;

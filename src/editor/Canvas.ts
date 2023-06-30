@@ -99,16 +99,16 @@ export default class Canvas {
   bindEvents(){
     const inst=this
     const canvas=this.canvas
-    const {minZoom, maxZoom, width: initialWidth, height: initialHeight, getSelectedType} = this.options
+    const {minZoom, maxZoom, width, height, getSelectedType} = this.options
     
     canvas.on('selection:cleared', function() {
-      // canvas.setSelectedObject([])
       console.log('clear selection')
       getSelectedType("")
     })
     canvas.on('selection:created', function(e: any) {
-      // setSelectedObject(e.selected)
-      console.log('created selection')
+      console.log('created selection: ', e.selected)
+      
+      // fixme
       if (e.selected.length === 1) {
         if (e.selected[0].type === "text") {
           getSelectedType("text")
@@ -118,15 +118,15 @@ export default class Canvas {
       getSelectedType("notText")
     })
     canvas.on('selection:updated', function (e: any) {
-      // setSelectedObject(e.selected)
-      console.log('update selection')
-      if (e.selected.length === 1) {
-        if (e.selected[0].type === "text") {
-          getSelectedType("text")
-          return
-        }
-      }
-      getSelectedType("notText")
+      console.log('update selection: ', e.selected)
+      
+      // if (e.selected.length === 1) {
+      //   if (e.selected[0].type === "text") {
+      //     getSelectedType("text")
+      //     return
+      //   }
+      // }
+      // getSelectedType("notText")
     })
   
     // zoom and panning
@@ -179,35 +179,6 @@ export default class Canvas {
       const panY=vpt[5]
       // console.log('panX, panY, zoom: ', panX, panY, zoom)
       
-      // solution-1: use css to scale canvas element
-      // canvas.wrapperEl.style.setProperty('transform', `scale(${zoom})`)
-      
-      // solution-2: use fabric to calc canvas and children dimension
-      // canvas.setDimensions({
-      //   width:  initialWidth * zoom,
-      //   height: initialHeight * zoom
-      // })
-      //
-      // // calc objects offset/scale
-      // canvas.getObjects().forEach(obj => {
-      //   const { left, top, scaleX, scaleY } = obj
-      //   console.log('obj before, scaleX, scaleY, zoom: ', obj.toJSON(), scaleX, scaleY, zoom)
-      //   if(!('origLeft' in obj)){
-      //     Object.assign(obj, {
-      //       origLeft: left,
-      //       origTop: top
-      //     })
-      //   }
-      //   obj.set({
-      //     scaleX: zoom,
-      //     scaleY: zoom,
-      //     left: obj.origLeft * zoom,
-      //     top: obj.origTop * zoom
-      //   })
-      //   obj.setCoords()
-      //   console.log('obj after: ', obj.toJSON())
-      // })
-      
       canvas.setViewportTransform([zoom, 0, 0, zoom, panX, panY])
       
       // based on vp center to zoom
@@ -222,9 +193,6 @@ export default class Canvas {
   
       opt.e.preventDefault();
       opt.e.stopPropagation();
-      
-      // canvas.requestRenderAll()
-      // canvas.calcOffset()
     })
   }
 
@@ -442,20 +410,6 @@ export default class Canvas {
       this.canvas.renderAll();
     });
   }
-  // addIcon(IconComponent){
-  //   const iconSVG = IconComponent({ size: 40 }); // Adjust the size as per your requirements
-  //   const svgString = new XMLSerializer().serializeToString(iconSVG);
-
-  //   fabric.loadSVGFromString(svgString, (objects, options) => {
-  //     const iconObj = fabric.util.groupSVGElements(objects, options);
-  //     iconObj.set({
-  //       left: 50,
-  //       top: 50,
-  //     });
-  //     this.canvas.add(iconObj);
-  //     this.canvas.renderAll();
-  //   });
-  // }
 
   addProperty(propertyId: string){
   

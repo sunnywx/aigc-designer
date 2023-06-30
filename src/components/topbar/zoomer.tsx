@@ -5,6 +5,7 @@ import {PiHandGrabbing, PiCursorFill} from 'react-icons/pi'
 import { useEffect, useMemo, useState } from "react";
 import ActionButton from '@/components/action-button'
 import cs from 'classnames'
+import {MdCleaningServices} from 'react-icons/md'
 
 interface Props {
 
@@ -41,6 +42,21 @@ export default function Zoomer(props: Props) {
   
   return (
     <div className={styles.zoomer}>
+      <ActionButton title='Zoom in' icon={<BiPlusCircle size={24}/>} onClick={()=> {
+        canvas?.zoomIn()
+        syncZoom()
+      }}/>
+      <ActionButton title='Reset zoom'>
+        <div className={styles.reset} onClick={()=> {
+          canvas?.zoomFit()
+          syncZoom()
+        }}>{zoomLabel}</div>
+      </ActionButton>
+      <ActionButton title='Zoom out' icon={<BiMinusCircle size={24}/>} onClick={()=> {
+        canvas?.zoomOut()
+        syncZoom()
+      }} />
+  
       <ActionButton
         title='Select mode'
         icon={<PiCursorFill size={22}/>}
@@ -59,20 +75,8 @@ export default function Zoomer(props: Props) {
           [styles.disable]: mode !== 'drag',
         })}
       />
-      
-      <ActionButton title='Zoom in' icon={<BiPlusCircle size={24}/>} onClick={()=> {
-        canvas?.zoomIn()
-        syncZoom()
-      }}/>
-      <ActionButton title='Reset zoom'>
-        <div className={styles.reset} onClick={()=> {
-          canvas?.zoomFit()
-          syncZoom()
-        }}>{zoomLabel}</div>
-      </ActionButton>
-      <ActionButton title='Zoom out' icon={<BiMinusCircle size={24}/>} onClick={()=> {
-        canvas?.zoomOut()
-        syncZoom()
+      <ActionButton title='Clear Canvas' icon={<MdCleaningServices size={24}/>} onClick={()=> {
+        canvas?.deleteAll()
       }} />
     </div>
   );

@@ -6,31 +6,27 @@ export const categories: CategoryItem[] = [
     name: 'Text'
   },
   {
-    type: 'shape',
-    name: 'Shape'
-  },
-  {
     type: 'photo',
     name: 'Photo'
   },
-  // {
-  //   type: 'ai',
-  //   name: 'AI image'
-  // },
   {
     type: 'template',
     name: 'Template'
   },
   {
-    type: 'property',
-    name: 'Property'
+    type: 'shape',
+    name: 'Shape'
   },
+  // {
+  //   type: 'property',
+  //   name: 'Property'
+  // },
   {
     type: 'icon',
     name: 'Icon'
   },
-  {
-    type: 'logo',
-    name: 'Logo'
-  },
+  // {
+  //   type: 'logo',
+  //   name: 'Logo'
+  // },
 ]

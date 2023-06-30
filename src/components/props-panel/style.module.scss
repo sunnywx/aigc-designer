@@ -1,10 +1,15 @@
 .panel {
-  width: 240px;
-  height: 637px !important;
+  width: 280px;
+  height: calc(100% - 60px);
+  position: absolute;
+  right: 10px;
+  left: unset;
+  top: 10px;
   margin-right: 10px;
   display: flex;
   flex-direction: column;
   row-gap: 10px;
+
   &.preview {
     visibility: hidden;
     transition: none;

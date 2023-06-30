@@ -5,6 +5,7 @@ import Loading from '@/components/loading'
 import cs from 'classnames'
 import {fabric} from 'fabric'
 import Preview from './preview'
+import ObjectHandlers from './object-handlers'
 
 import styles from './style.module.scss'
 
@@ -94,6 +95,7 @@ export default function Editor({
         {!canvas && <Loading />}
         {canvas && renderTopbar?.(canvas!)}
         <div className={cs(styles.main, mainClassName)}>
+          <ObjectHandlers />
           {canvas && renderLeftPanel?.(canvas)}
           <div
             ref={canvasElParent as LegacyRef<any>}
