@@ -7,6 +7,7 @@ import {debounce} from 'lodash'
 import { TextOptions } from "fabric/fabric-impl";
 import React from "react";
 import ReactDOMServer from 'react-dom/server';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
   fillColor?: string;
@@ -17,6 +18,7 @@ export interface CanvasOptions extends fabric.ICanvasOptions {
   minZoom?: number;
   maxZoom?: number;
   getSelectedType: (type: string) => void;
+  getCanvasObjects: (objects: any) => void;
 }
 
 // Canvas class using fabric
@@ -201,10 +203,12 @@ export default class Canvas {
     const object = new fabric.Textbox(text, {
       ...TEXT, 
       fill: this.options.strokeColor,
+      name: uuidv4(),
       ...option
     })
     object.set({ text: text })
     this.canvas.centerObject(object).add(object)
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
   addImage(url: string) {
@@ -217,9 +221,12 @@ export default class Canvas {
         // scale img to fit canvas
         img.scale(1 / (ratio + 2))
       }
+      img.name= uuidv4(),
+      img.type= "img"
       this.canvas.centerObject(img)
       this.canvas.setActiveObject(img)
       this.canvas.add(img)
+      this.options.getCanvasObjects(this.canvas.getObjects())
     }, {
       // in order to export image data url
       crossOrigin: "Anonymous"
@@ -229,9 +236,12 @@ export default class Canvas {
   addLine() {
     const object = new fabric.Line(LINE.points, {
       ...LINE.options,
-      stroke: this.options.strokeColor
+      stroke: this.options.strokeColor,
+      name: uuidv4(),
+      type: "line"
     })
     this.canvas.add(object)
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
   addArrow(){
@@ -276,10 +286,12 @@ export default class Canvas {
 
     const object = new fabric.LineArrow(LINE.points, {
       ...LINE.options,
-      stroke: this.options.strokeColor
+      stroke: this.options.strokeColor,
+      name: uuidv4(),
+      type: "arrow"
     })
     this.canvas.add(object)
-    
+    this.options.getCanvasObjects(this.canvas.getObjects())
     // TODO: drawing mode - for future feat
     // fabric.LineArrow.fromObject = function(object, callback) {
     //   callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
@@ -374,30 +386,39 @@ export default class Canvas {
     const object = new fabric.Circle({
       ...CIRCLE,
       fill: this.options.fillColor,
-      stroke: this.options.strokeColor
+      stroke: this.options.strokeColor,
+      name: uuidv4(),
+      type: "circle"
     })
     this.canvas.add(object)
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
   addRectangle(){
     const object = new fabric.Rect({
       ...RECTANGLE,
       fill: this.options.fillColor,
-      stroke: this.options.strokeColor
+      stroke: this.options.strokeColor,
+      name: uuidv4(),
+      type: "rectangle"
     })
     this.canvas.add(object)
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
   addTriangle(){
     const object = new fabric.Triangle({
       ...TRIANGLE,
       fill: this.options.fillColor,
-      stroke: this.options.strokeColor
+      stroke: this.options.strokeColor,
+      name: uuidv4(),
+      type: "triangle"
     })
     this.canvas.add(object)
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
-  addIcon(IconComponent) {
+  addIcon(iconName: string, IconComponent: any) {
     const iconElement = React.createElement(IconComponent, { size: 40 });
     const iconSVG = ReactDOMServer.renderToString(iconElement);
   
@@ -407,9 +428,12 @@ export default class Canvas {
         left: 50,
         top: 50,
         fill: this.options.fillColor,
-        stroke: this.options.strokeColor
+        stroke: this.options.strokeColor,
+        name: `${iconName}-${uuidv4()}`,
+        type: "icon"
       });
       this.canvas.add(iconObj);
+      this.options.getCanvasObjects(this.canvas.getObjects())
       this.canvas.renderAll();
     });
   }
@@ -426,12 +450,14 @@ export default class Canvas {
     this.canvas.getObjects().forEach((object) => this.canvas.remove(object))
     this.canvas.discardActiveObject()
     this.canvas.requestRenderAll()
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
   deleteSelected() {
     this.canvas.getActiveObjects().forEach((object) => this.canvas.remove(object))
     this.canvas.discardActiveObject()
     this.canvas.requestRenderAll()
+    this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
   setFillColor(fill: string) {

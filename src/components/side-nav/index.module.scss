@@ -1,6 +1,7 @@
 .nav {
   display: flex;
   flex-direction: column;
+  row-gap: 10px;
   align-items: center;
   width: var(--pg-source-panel-wid);
   background: var(--pg-panel-bg-color);
@@ -12,6 +13,7 @@
   padding: 5px;
   margin-left: 10px;
   z-index: 100;
+  padding-block: 25px;
 
   .group {
     display: flex;
@@ -19,22 +21,17 @@
     justify-content: center;
     row-gap: 5px;
     align-items: center;
-    margin-bottom: 20px;
     cursor: pointer;
     text-align: center;
     width: 65px;
     height: 65px;
-    border: 1px solid #eee;
+    border: 1px solid var(--gray-200);
     border-radius: 8px;
     font-size: 12px;
     //transition: all 1s ease;
     svg {
       width: 24px;
       height: 24px;
-    }
-    
-    &:first-of-type {
-      margin-top: 20px;
     }
 
     &.active, &:hover {

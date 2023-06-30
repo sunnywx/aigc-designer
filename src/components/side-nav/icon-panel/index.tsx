@@ -23,8 +23,10 @@ export default function IconPanel() {
         {icons2.map((icon, index) => (
           <Tooltip
             title={icon[0]}
+            placement="top"
+            disableInteractive
           >
-            <Button key={index} onClick={() => canvas?.addIcon(icon[1])}>
+            <Button key={index} onClick={() => canvas?.addIcon(icon[0], icon[1])}>
               {React.createElement(icon[1], { size: 20 })}
             </Button>
           </Tooltip>
