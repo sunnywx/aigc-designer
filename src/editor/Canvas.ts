@@ -210,9 +210,12 @@ export default class Canvas {
   addImage(url: string) {
     fabric.Image.fromURL(url, img=> {
       console.log('load img, w/h: ', img, img.width, img.height)
-      // transform img
-      if(Math.max(img.width!, img.height!) > 256){
-        img.scale(0.5)
+      const ratioW=img.width / this.canvas.width
+      const ratioH=img.height / this.canvas.height
+      const ratio=Math.max(ratioW, ratioH)
+      if(ratio > 1){
+        // scale img to fit canvas
+        img.scale(1 / (ratio + 2))
       }
       this.canvas.centerObject(img)
       this.canvas.setActiveObject(img)
