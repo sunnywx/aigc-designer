@@ -104,7 +104,7 @@ export default function Editor({
         {!canvas && <Loading />}
         {canvas && renderTopbar?.(canvas!)}
         <div className={cs(styles.main, mainClassName)}>
-          <ObjectHandlers />
+          {(!canvas || canvasState.preview || canvas.canvas.getActiveObjects().length === 0) ? null : <ObjectHandlers />}
           {canvas && renderLeftPanel?.(canvas)}
           <div
             ref={canvasElParent as LegacyRef<any>}

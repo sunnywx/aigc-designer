@@ -156,28 +156,30 @@ export default function PropsPanel({canvas, selectedType}: Props) {
         </>}
         <Typography variant="caption">Fill color</Typography>
         <ColorInput value={fillColor || canvas.options.fillColor} onChange={setFillColor} changeHandler={onSetFillColor} />
-        <Typography variant='caption'>Layers</Typography>
-        <ObjectHandlers />
-        <div className={classes.layerContainer}>
-          {canvasObjects && canvasObjects.length !== 0 && canvasObjects.reverse()
-            .map((item: any, index: number) => (
-              <Button
-                key={index}
-                id={item.name}
-                className={classes.layerItem}
-                onClick={() => {
-                  canvas.canvas.setActiveObject(item)
-                  canvas.canvas.renderAll()
-                }}
-              >
-                <div>
-                  {getIcon(item)}
-                </div>
-                <Typography variant='caption'>{item.type}</Typography>
-              </Button>
-            ))
-          }
-        </div>
+        {canvasObjects && canvasObjects.length !== 0 && <>
+          <Typography variant='caption'>Layers</Typography>
+          <ObjectHandlers className={classes.layerPanelObjects} />
+          <div className={classes.layerContainer}>
+            {canvasObjects && canvasObjects.length !== 0 && canvasObjects.reverse()
+              .map((item: any, index: number) => (
+                <Button
+                  key={index}
+                  id={item.name}
+                  className={classes.layerItem}
+                  onClick={() => {
+                    canvas.canvas.setActiveObject(item)
+                    canvas.canvas.renderAll()
+                  }}
+                >
+                  <div>
+                    {getIcon(item)}
+                  </div>
+                  <Typography variant='caption'>{item.type === "icon" ? item.name.split("-")[0] : item.type}</Typography>
+                </Button>
+              ))
+            }
+          </div>
+        </>}
       </div>
     </Panel>
   );
@@ -205,6 +207,7 @@ const useStyles = makeStyles(() => ({
   layerItem: {
     display: "flex",
     justifyContent: "flex-start",
+    textTransform: "capitalize",
     alignItems: "center",
     paddingLeft: "10px",
     borderRadius: "4px",
@@ -218,5 +221,11 @@ const useStyles = makeStyles(() => ({
       display: "grid",
       placeItems: "center"
     },
+  },
+  layerPanelObjects: {
+    position: "static",
+    transform: "none",
+    width: "100%"
+
   }
 }))
