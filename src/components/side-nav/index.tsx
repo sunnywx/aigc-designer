@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import cs from 'classnames'
 import {Canvas, useEditor} from '@/editor'
 import Panel from '@/components/panel'
@@ -34,17 +34,23 @@ export default function SideNav(props: Props) {
   const [pin, setPin] = useState(false) // panel pinned
   const [active, setActive] = useState<ElementType>('text')
   
-  // useEffect(() => {
-  //   document.addEventListener('click', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    // document.addEventListener('click', handleClickOutside);
+    window.addEventListener('resize', fixSourcePanelOffset)
+    return () => {
+      // document.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('resize', fixSourcePanelOffset)
+    };
+  }, []);
 
   // fix canvas offset when panel open
   useEffect(() => {
+    fixSourcePanelOffset()
+  }, [fixSourcePanelOffset, panelOpen])
+  
+  function fixSourcePanelOffset(){
     if (!panelRef.current) return
-    
+  
     const canvasRef = document.getElementById('editor-canvas')
     const sourcePanel = document.getElementsByClassName('source-panel')[0]
     if (panelOpen && canvasRef) {
@@ -59,7 +65,7 @@ export default function SideNav(props: Props) {
     } else {
       canvasRef?.style.setProperty('transform', `translateX(0)`)
     }
-  }, [panelOpen])
+  }
   
   function handleClickOutside(ev: any): void {
     if (!panelRef.current?.contains(ev.target) && !pin) {
