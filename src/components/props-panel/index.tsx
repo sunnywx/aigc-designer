@@ -207,7 +207,7 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flex: 1,
     maxHeight: "520px",
-    flexDirection: "column",
+    flexDirection: "column-reverse",
     rowGap: "5px",
     overflowY: "auto"
   },
