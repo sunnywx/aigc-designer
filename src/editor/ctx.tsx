@@ -11,7 +11,7 @@ export type EditorContextType = {
   setPanelOpen?: Dispatch<SetStateAction<boolean>> | (() => void)
   emitter: Emitter<any> | {}
   canvasState: CanvasState
-  setCanvasState: Dispatch<SetStateAction<CanvasState>>
+  setCanvasState: Dispatch<SetStateAction<CanvasState>>;
 }
 
 export type EmitEvents={

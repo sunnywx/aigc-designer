@@ -17,7 +17,7 @@ export interface CanvasOptions extends fabric.ICanvasOptions {
   zoomStep?: number;
   minZoom?: number;
   maxZoom?: number;
-  getSelectedType: (type: string) => void;
+  getSelectedObject: (obj: any) => void;
   getCanvasObjects: (objects: any) => void;
 }
 
@@ -101,34 +101,31 @@ export default class Canvas {
   bindEvents(){
     const inst=this
     const canvas=this.canvas
-    const {minZoom, maxZoom, width, height, getSelectedType} = this.options
+    const {minZoom, maxZoom, width, height, getCanvasObjects, getSelectedObject} = this.options
     
     canvas.on('selection:cleared', function() {
       console.log('clear selection')
-      getSelectedType("")
+
+      getSelectedObject(null)
+      canvas.discardActiveObject()
+      canvas.renderAll()
     })
     canvas.on('selection:created', function(e: any) {
       console.log('created selection: ', e.selected)
       
       // fixme
       if (e.selected.length === 1) {
-        if (e.selected[0].type === "text") {
-          getSelectedType("text")
-          return
-        }
+        canvas.setActiveObject(e.selected[0])
+        getSelectedObject(e.selected[0])
       }
-      getSelectedType("notText")
     })
     canvas.on('selection:updated', function (e: any) {
       console.log('update selection: ', e.selected)
       
-      // if (e.selected.length === 1) {
-      //   if (e.selected[0].type === "text") {
-      //     getSelectedType("text")
-      //     return
-      //   }
-      // }
-      // getSelectedType("notText")
+      if (e.selected.length === 1) {
+        canvas.setActiveObject(e.selected[0])
+        getSelectedObject(e.selected[0])
+      }
     })
   
     // zoom and panning
@@ -208,6 +205,7 @@ export default class Canvas {
     })
     object.set({ text: text })
     this.canvas.centerObject(object).add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
@@ -241,6 +239,7 @@ export default class Canvas {
       type: "line"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
@@ -291,6 +290,7 @@ export default class Canvas {
       type: "arrow"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
     // TODO: drawing mode - for future feat
     // fabric.LineArrow.fromObject = function(object, callback) {
@@ -391,6 +391,7 @@ export default class Canvas {
       type: "circle"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
@@ -403,6 +404,7 @@ export default class Canvas {
       type: "rectangle"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
@@ -415,6 +417,7 @@ export default class Canvas {
       type: "triangle"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
@@ -433,6 +436,7 @@ export default class Canvas {
         type: "icon"
       });
       this.canvas.add(iconObj);
+      this.canvas.setActiveObject(iconObj)
       this.options.getCanvasObjects(this.canvas.getObjects())
       this.canvas.renderAll();
     });

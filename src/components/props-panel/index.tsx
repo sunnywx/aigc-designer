@@ -18,36 +18,12 @@ import ObjectHandlers from '@/editor/object-handlers';
 
 interface Props {
   canvas: Canvas;
-  selectedType?: string;
 }
 
-export default function PropsPanel({canvas, selectedType}: Props) {
+export default function PropsPanel({canvas}: Props) {
   const classes = useStyles();
-  const [strokeColor, setStrokeColor] = useState('')
-  const [fillColor, setFillColor] = useState('')
   const {canvasState}=useEditor()
-  const { canvasObjects } = useEditor();
-  console.log("index.tsx ~ line 23: canvasObjects:", canvasObjects);
-  
-  const onSetStrokeColor = (color: string) => {
-    canvas?.setStrokeColor(color)
-  }
-  const onSetFillColor = (color: string) => {
-    canvas?.setFillColor(color)
-  }
-
-  const fontArr: string[] = [
-    "Arial",
-    "Times New Roman",
-    "Calibri",
-    "Verdana",
-    "Courier New",
-    "Segoe UI",
-    "Tahoma",
-    "Georgia",
-    "Trebuchet MS",
-    "Impact"
-  ];
+  const { canvasObjects, selectedObject } = useEditor();
 
   const getIcon = (item: {type: string, name: string}) => {
     switch (item.type) {
@@ -81,90 +57,26 @@ export default function PropsPanel({canvas, selectedType}: Props) {
       visible
     >
       <div className={styles.panelContent}>
-        {selectedType === "text" && <>
-          <Typography variant="caption">Text alignment</Typography>
-          <div className={styles.alignmentBtns}>
-            <IconButton onClick={() => canvas?.setTextAlign("left")}>
-              <FaAlignLeft />
-            </IconButton>
-            <IconButton onClick={() => canvas?.setTextAlign("center")}>
-              <FaAlignCenter />
-            </IconButton>
-            <IconButton onClick={() => canvas?.setTextAlign("right")}>
-              <FaAlignRight />
-            </IconButton>
-            <IconButton onClick={() => canvas?.setTextAlign("justify")}>
-              <FaAlignJustify />
-            </IconButton>
-          </div>
-          <Typography variant="caption">Font</Typography>
-          <div>
-            <Select
-              className={classes.fontFamilySelector}
-              defaultValue={fontArr[0]}
-              onChange={e => canvas?.setTextFontFamily(e.target.value)}
-            >
-              {fontArr.filter(Boolean).map(font => (
-                <MenuItem key={font} value={font}>
-                  <Typography fontFamily={font} fontSize="14px">{font}</Typography>
-                </MenuItem>
-              ))
-              }
-            </Select>
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                maxHeight: "30px",
-                alignItems: "center",
-                marginTop: 1,
-                "& .MuiInputBase-root": {
-                  maxHeight: "30px",
-                },
-                "& > p": {
-                  width: "100%",
-                  display: "grid",
-                  placeItems: "center"
-                },
-              }}
-            >
-              <TextField
-                defaultValue={40}
-                onChange={e => canvas?.setTextFontSize(e.target.value)}
-                inputProps={{
-                  type: "number"
-                }}
-              />
-              <Typography component="p" fontSize="14px">Size in px</Typography>
-            </Box>
-          </div>
-          <Typography variant="caption">Stroke color</Typography>
-          <ColorInput value={strokeColor || canvas.options.strokeColor} onChange={setStrokeColor} changeHandler={onSetStrokeColor} />
-        </>}
-        <Typography variant="caption">Fill color</Typography>
-        <ColorInput value={fillColor || canvas.options.fillColor} onChange={setFillColor} changeHandler={onSetFillColor} />
         {canvasObjects && canvasObjects.length !== 0 && <>
           <Typography variant='caption'>Layers</Typography>
-          <ObjectHandlers className={classes.layerPanelObjects} />
+          <ObjectHandlers layersOnly={true} className={classes.layerPanelObjects} />
           <div className={classes.layerContainer}>
-            {canvasObjects && canvasObjects.length !== 0 && canvasObjects.reverse()
-              .map((item: any, index: number) => (
-                <Button
-                  key={index}
-                  id={item.name}
-                  className={classes.layerItem}
-                  onClick={() => {
-                    canvas.canvas.setActiveObject(item)
-                    canvas.canvas.renderAll()
-                  }}
-                >
-                  <div>
-                    {getIcon(item)}
-                  </div>
-                  <Typography variant='caption'>{item.type === "icon" ? item.name.split("-")[0] : item.type}</Typography>
-                </Button>
-              ))
-            }
+            {canvasObjects.map((item: any, index: number) => (
+              <Button
+                key={index}
+                id={item.name}
+                className={classes.layerItem}
+                onClick={() => {
+                  canvas.canvas.setActiveObject(item)
+                  canvas.canvas.renderAll()
+                }}
+              >
+                <div>
+                  {getIcon(item)}
+                </div>
+                <Typography variant='caption'>{item.type === "icon" ? item.name.split("-")[0] : item.type}</Typography>
+              </Button>
+            ))}
           </div>
         </>}
       </div>
@@ -173,16 +85,6 @@ export default function PropsPanel({canvas, selectedType}: Props) {
 }
 
 const useStyles = makeStyles(() => ({
-  fontFamilySelector: {
-    height: "30px",
-    width: "100%",
-    "& .MuiSelect-select": {
-      boxSizing: "border-box",
-      padding: 0,
-      paddingLeft: "14px",
-      maxHeight: "30px",
-    }
-  },
   layerContainer: {
     display: "flex",
     flex: 1,
