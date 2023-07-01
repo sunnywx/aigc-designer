@@ -10,14 +10,17 @@ import ReactDOMServer from 'react-dom/server';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
+  fontColor?: string;
   fillColor?: string;
   textAlign?: string
   fontFamily?: string;
+  fontSize?: number;
+  fontWeight?: string | number;
   strokeColor?: string;
   zoomStep?: number;
   minZoom?: number;
   maxZoom?: number;
-  getSelectedType: (type: string) => void;
+  getSelectedObject: (obj: any) => void;
   getCanvasObjects: (objects: any) => void;
 }
 
@@ -54,10 +57,13 @@ export default class Canvas {
     this.options=_.defaults(this.options, options, {
       ...this.lastDimension,
       backgroundColor: '#f5f5f5',
+      fontColor: "#000000",
       fillColor: '#143ab8',
       strokeColor: '#000000',
       textAlign: 'left',
-      fontFamily: "arial",
+      fontFamily: TEXT.fontFamily,
+      fontSize: TEXT.fontSize,
+      fontWeight: 'normal',
       zoomStep: 0.2,
       minZoom: 0.2,
       maxZoom: 2,
@@ -101,34 +107,31 @@ export default class Canvas {
   bindEvents(){
     const inst=this
     const canvas=this.canvas
-    const {minZoom, maxZoom, width, height, getSelectedType} = this.options
+    const {minZoom, maxZoom, width, height, getCanvasObjects, getSelectedObject} = this.options
     
     canvas.on('selection:cleared', function() {
       console.log('clear selection')
-      getSelectedType("")
+
+      getSelectedObject(null)
+      canvas.discardActiveObject()
+      canvas.renderAll()
     })
     canvas.on('selection:created', function(e: any) {
       console.log('created selection: ', e.selected)
       
       // fixme
       if (e.selected.length === 1) {
-        if (e.selected[0].type === "text") {
-          getSelectedType("text")
-          return
-        }
+        canvas.setActiveObject(e.selected[0])
+        getSelectedObject(e.selected[0])
       }
-      getSelectedType("notText")
     })
     canvas.on('selection:updated', function (e: any) {
       console.log('update selection: ', e.selected)
       
-      // if (e.selected.length === 1) {
-      //   if (e.selected[0].type === "text") {
-      //     getSelectedType("text")
-      //     return
-      //   }
-      // }
-      // getSelectedType("notText")
+      if (e.selected.length === 1) {
+        canvas.setActiveObject(e.selected[0])
+        getSelectedObject(e.selected[0])
+      }
     })
   
     // zoom and panning
@@ -206,8 +209,12 @@ export default class Canvas {
       name: uuidv4(),
       ...option
     })
+    this.options.fontFamily = option.fontFamily;
+    this.options.fontSize = option.fontSize;
+    this.options.fontWeight = option.fontWeight;
     object.set({ text: text })
     this.canvas.centerObject(object).add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
@@ -241,6 +248,7 @@ export default class Canvas {
       type: "line"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
@@ -291,6 +299,7 @@ export default class Canvas {
       type: "arrow"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
     // TODO: drawing mode - for future feat
     // fabric.LineArrow.fromObject = function(object, callback) {
@@ -391,6 +400,7 @@ export default class Canvas {
       type: "circle"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
@@ -403,6 +413,7 @@ export default class Canvas {
       type: "rectangle"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
   
@@ -415,6 +426,7 @@ export default class Canvas {
       type: "triangle"
     })
     this.canvas.add(object)
+    this.canvas.setActiveObject(object)
     this.options.getCanvasObjects(this.canvas.getObjects())
   }
 
@@ -433,6 +445,7 @@ export default class Canvas {
         type: "icon"
       });
       this.canvas.add(iconObj);
+      this.canvas.setActiveObject(iconObj)
       this.options.getCanvasObjects(this.canvas.getObjects())
       this.canvas.renderAll();
     });

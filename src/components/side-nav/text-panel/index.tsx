@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const FontFaceObserver=require('fontfaceobserver')
 // import * as FontFaceObserver from 'fontfaceobserver'
 import cs from 'classnames'
+import {fonts} from "../config"
 
 type FontOption={
   color?: string;
@@ -13,36 +14,10 @@ type FontOption={
   style?: 'normal' | 'italic'
 }
 
-// see: https://www.cssfontstack.com/
-// define some native fonts supported well by win/mac
-const fonts=[
-  // available
-  'cursive',
-  'emoji',
-  'fantasy',
-  'monospace',
-  'sans-serif',
-  'serif',
-  
-  // sans-serif
-  // 'Aria',
-  // 'Arial Narrow',
-  // 'Tahoma',
-  // 'Trebuchet MS',
-  // 'Verdana',
-  // // serif
-  // 'Georgia',
-  // 'Times New Roman',
-  // // monospaced
-  // 'Consolas',
-  // 'Courier New',
-  // 'Monaco'
-]
-
 export default function TextPanel() {
   const {canvas}=useEditor()
   const [text, setText] = useState('aigc')
-  const [fontFamily, setFontFamily]=useState('initial')
+  const [fontFamily, setFontFamily]=useState(fonts[0])
   
   function addHeading(){
     canvas?.addText(text, {

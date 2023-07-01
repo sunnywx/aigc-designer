@@ -40,11 +40,11 @@ export default function Editor({
     dragMode: false,
     preview: false
   })
-  const [selectedType, setselectedType] = useState<string | undefined>(undefined)
+  const [selectedObject, setSelectedObject] = useState<any>(undefined)
   const {preview}=canvasState
 
-  function getSelectedType(type: string) {
-    setselectedType(type || undefined);
+  function getSelectedObject(obj: any) {
+    setSelectedObject(obj);
   }
 
   function getCanvasObjects(obj: any) {
@@ -53,7 +53,7 @@ export default function Editor({
   
   useEffect(() => {
     const canvas = new Canvas(canvasEl.current!, {
-      getSelectedType,
+      getSelectedObject,
       getCanvasObjects
     })
     setCanvas(canvas);
@@ -97,14 +97,16 @@ export default function Editor({
         setCanvasState,
         canvasObjects,
         setCanvasObjects,
-        getCanvasObjects
+        getCanvasObjects,
+        getSelectedObject,
+        selectedObject
       }}
     >
       <div className={cs(styles.wrap, className)}>
         {!canvas && <Loading />}
         {canvas && renderTopbar?.(canvas!)}
         <div className={cs(styles.main, mainClassName)}>
-          {(!canvas || canvasState.preview || canvas.canvas.getActiveObjects().length === 0) ? null : <ObjectHandlers />}
+          {(canvas && !canvasState.preview && canvas.canvas.getActiveObject()) ? <ObjectHandlers /> : null}
           {canvas && renderLeftPanel?.(canvas)}
           <div
             ref={canvasElParent as LegacyRef<any>}
@@ -116,7 +118,7 @@ export default function Editor({
             {preview && <Preview />}
           </div>
           {children}
-          {canvas && renderRightPanel?.(canvas!, selectedType)}
+          {canvas && renderRightPanel?.(canvas!)}
         </div>
       </div>
     </EditorProvider>
