@@ -64,7 +64,7 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
   return (
     <div className={cs(styles.handlers, className)}>
       {canvas && !layersOnly && <>
-        {selectedObject && selectedObject?.type !== "text" && (
+        {(selectedObject && selectedObject?.type !== "text" && selectedObject?.type !== "img") && (
         <>
           {(selectedObject?.type !== "line" && selectedObject?.type !== "arrow") &&<ColorInput type="fill" value={fillColor || canvas.options.fillColor} changeHandler={onSetFillColor} />}
           {selectedObject?.type !== "icon" && <ColorInput type="stroke" value={strokeColor || canvas?.options.strokeColor} changeHandler={onSetStrokeColor} />}
