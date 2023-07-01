@@ -73,6 +73,7 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
           <>
             <Tooltip
               title="Font family"
+              disableInteractive
             >
               <Select
                 className={styles.fontFamilySelector}
@@ -88,7 +89,7 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
               </Select>
             </Tooltip>
             <ColorInput type="stroke" value={selectedObject.fill || canvas?.options.strokeColor || "#000000"} changeHandler={onSetStrokeColor} />
-            <Tooltip title="Font-size">
+            <Tooltip disableInteractive title="Font-size">
               <Box
                 sx={{
                   display: "flex",

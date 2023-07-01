@@ -203,7 +203,6 @@ export default class Canvas {
 
   addText(text: string, option: TextOptions={}) {
     // use stroke in text fill, fill default is most of the time transparent
-    console.log("Canvas.ts ~ line 206: this.options.strokeColor:", this.options.strokeColor);
     const object = new fabric.Textbox(text, {
       ...TEXT, 
       fill: this.options.strokeColor,
