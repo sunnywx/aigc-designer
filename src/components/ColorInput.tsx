@@ -5,12 +5,11 @@ import clsx from "clsx"
 
 interface Props {
   value?: string;
-  onChange: Dispatch<SetStateAction<string>>;
   changeHandler: (color: string) => void;
   type: "stroke" | "fill";
 }
 
-export const ColorInput = ({ value, onChange, changeHandler, type }: Props) => {
+export const ColorInput = ({ value, changeHandler, type }: Props) => {
   const classes = useStyles();
 
   return (
@@ -22,7 +21,6 @@ export const ColorInput = ({ value, onChange, changeHandler, type }: Props) => {
           type='color'
           value={value}
           onChange={(e) => {
-            onChange(e.target.value)
             changeHandler(e.target.value)
           }}
           className={classes.colorInput}

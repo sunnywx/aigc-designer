@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import cs from 'classnames'
 import {useEditor} from '@/editor'
 import {MdOutlineDeleteOutline} from 'react-icons/md'
@@ -36,20 +36,37 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
   if (canvasObjects && canvasObjects.length === 0) return null;
 
   const onSetStrokeColor = (color: string) => {
-    canvas?.setStrokeColor(color)
+    setStrokeColor(color);
+    canvas?.setStrokeColor(color);
   }
 
   const onSetFillColor = (color: string) => {
-    canvas?.setFillColor(color)
+    setFillColor(color);
+    canvas?.setFillColor(color);
   }
+
+  console.log("object-handlers.tsx ~ line 46: selectedObject:", selectedObject);
+  useEffect(() => {
+    if (selectedObject) {
+      onSetStrokeColor(selectedObject.stroke)
+      setStrokeColor(selectedObject.stroke)
+      onSetFillColor(selectedObject.fill)
+      setFillColor(selectedObject.fill)
+    }
+  
+    // return () => {
+    //   second
+    // }
+  }, [selectedObject])
+  
 
   return (
     <div className={cs(styles.handlers, className)}>
       {canvas && !layersOnly && <>
         {selectedObject && selectedObject?.type !== "text" && (
         <>
-          <ColorInput type="fill" value={fillColor || canvas.options.fillColor} onChange={setFillColor} changeHandler={onSetFillColor} />
-          {selectedObject?.type !== "icon" && <ColorInput type="stroke" value={strokeColor || canvas?.options.strokeColor} onChange={setStrokeColor} changeHandler={onSetStrokeColor} />}
+          {(selectedObject?.type !== "line" && selectedObject?.type !== "arrow") &&<ColorInput type="fill" value={fillColor || canvas.options.fillColor} changeHandler={onSetFillColor} />}
+          {selectedObject?.type !== "icon" && <ColorInput type="stroke" value={strokeColor || canvas?.options.strokeColor} changeHandler={onSetStrokeColor} />}
         </>)}
         {selectedObject && selectedObject?.type === "text" && (
           <>
@@ -68,7 +85,7 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
                 ))}
               </Select>
             </Tooltip>
-            <ColorInput type="stroke" value={strokeColor || canvas?.options.strokeColor} onChange={setStrokeColor} changeHandler={onSetStrokeColor} />
+            <ColorInput type="stroke" value={strokeColor || canvas?.options.strokeColor} changeHandler={onSetStrokeColor} />
             <Tooltip title="Font-size">
               <Box
                 sx={{
