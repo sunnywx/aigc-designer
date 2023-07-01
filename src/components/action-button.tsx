@@ -12,7 +12,7 @@ interface Props {
 
 export default function ActionButton({ title, icon, iconSize = '20px', children, onClick, className }: Props) {
   return (
-    <Tooltip title={title}>
+    <Tooltip disableInteractive title={title}>
       <div className={className}>
         {children}
         {icon && (

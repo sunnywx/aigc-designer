@@ -1,11 +1,9 @@
 import {Canvas, useEditor} from '@/editor'
 import styles from './style.module.scss'
-import { Box, Button, IconButton, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { Button, Typography } from "@mui/material";
 // import ColorPicker from '@/components/color-picker'
 import Panel from '@/components/panel'
-import { ColorInput } from '../ColorInput';
-import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight, FaHashtag, FaLongArrowAltRight, FaMinus } from 'react-icons/fa';
+import { FaHashtag, FaLongArrowAltRight, FaMinus } from 'react-icons/fa';
 import { TbLetterT } from 'react-icons/tb';
 import { makeStyles } from '@mui/styles';
 import cs from 'classnames'

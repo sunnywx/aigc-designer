@@ -15,6 +15,7 @@ export const ColorInput = ({ value, changeHandler, type }: Props) => {
   return (
     <div className={type === "fill"? clsx(classes.colorPicker, classes.fillTypePicker) : classes.colorPicker}>
       <Tooltip
+        disableInteractive
         title={type === "fill" ? "Fill color" : "Stroke color"}
       >
         <input

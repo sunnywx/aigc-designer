@@ -10,9 +10,12 @@ import ReactDOMServer from 'react-dom/server';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface CanvasOptions extends fabric.ICanvasOptions {
+  fontColor?: string;
   fillColor?: string;
   textAlign?: string
   fontFamily?: string;
+  fontSize?: number;
+  fontWeight?: string | number;
   strokeColor?: string;
   zoomStep?: number;
   minZoom?: number;
@@ -54,10 +57,13 @@ export default class Canvas {
     this.options=_.defaults(this.options, options, {
       ...this.lastDimension,
       backgroundColor: '#f5f5f5',
+      fontColor: "#000000",
       fillColor: '#143ab8',
       strokeColor: '#000000',
       textAlign: 'left',
-      fontFamily: "arial",
+      fontFamily: TEXT.fontFamily,
+      fontSize: TEXT.fontSize,
+      fontWeight: 'normal',
       zoomStep: 0.2,
       minZoom: 0.2,
       maxZoom: 2,
@@ -197,12 +203,16 @@ export default class Canvas {
 
   addText(text: string, option: TextOptions={}) {
     // use stroke in text fill, fill default is most of the time transparent
+    console.log("Canvas.ts ~ line 206: this.options.strokeColor:", this.options.strokeColor);
     const object = new fabric.Textbox(text, {
       ...TEXT, 
       fill: this.options.strokeColor,
       name: uuidv4(),
       ...option
     })
+    this.options.fontFamily = option.fontFamily;
+    this.options.fontSize = option.fontSize;
+    this.options.fontWeight = option.fontWeight;
     object.set({ text: text })
     this.canvas.centerObject(object).add(object)
     this.canvas.setActiveObject(object)

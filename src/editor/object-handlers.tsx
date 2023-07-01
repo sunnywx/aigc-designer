@@ -9,29 +9,19 @@ import styles from './style.module.scss'
 import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight } from 'react-icons/fa'
 import { Box, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { ColorInput } from '@/components/ColorInput'
+import { fonts as fontArr } from "@/components/side-nav/config" 
 
 interface Props {
   className?: string;
   layersOnly?: boolean;
 }
 
-const fontArr: string[] = [
-  "Arial",
-  "Times New Roman",
-  "Calibri",
-  "Verdana",
-  "Courier New",
-  "Segoe UI",
-  "Tahoma",
-  "Georgia",
-  "Trebuchet MS",
-  "Impact"
-];
-
 export default function ObjectHandlers({className, layersOnly=false}: Props) {
   const {canvas, canvasState, canvasObjects, setCanvasObjects, selectedObject}=useEditor()
   const [strokeColor, setStrokeColor] = useState('')
   const [fillColor, setFillColor] = useState('')
+  const [fontSize, setFontSize] = useState(40)
+  const [fontFamily, setFontFamily] = useState('')
   
   if (canvasObjects && canvasObjects.length === 0) return null;
 
@@ -45,18 +35,29 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
     canvas?.setFillColor(color);
   }
 
-  console.log("object-handlers.tsx ~ line 46: selectedObject:", selectedObject);
+  const onSetFontSize = (size: number) => {
+    setFontSize(size)
+    canvas?.setTextFontSize(size)
+  }
+
+  const onSetFontFamily = (font: number) => {
+    setFontFamily(font)
+    canvas?.setTextFontFamily(font)
+  }
+
   useEffect(() => {
     if (selectedObject) {
-      onSetStrokeColor(selectedObject.stroke)
-      setStrokeColor(selectedObject.stroke)
-      onSetFillColor(selectedObject.fill)
-      setFillColor(selectedObject.fill)
+      if (selectedObject.type === "text") {
+        canvas?.setOption("fill", selectedObject.stroke || canvas?.options.strokeColor)
+        onSetFontSize(selectedObject.fontSize || canvas?.options.fontSize)
+        onSetFontFamily(selectedObject.fontFamily || canvas?.options.fontFamily)
+        return;
+      }
+      onSetStrokeColor(selectedObject.stroke || canvas?.options.strokeColor)
+      setStrokeColor(selectedObject.stroke || canvas?.options.strokeColor)
+      onSetFillColor(selectedObject.fill || canvas?.options.fillColor)
+      setFillColor(selectedObject.fill || canvas?.options.fillColor)
     }
-  
-    // return () => {
-    //   second
-    // }
   }, [selectedObject])
   
 
@@ -76,7 +77,8 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
               <Select
                 className={styles.fontFamilySelector}
                 defaultValue={fontArr[0]}
-                onChange={e => canvas?.setTextFontFamily(e.target.value)}
+                value={fontFamily || canvas?.options.fontFamily}
+                onChange={e => onSetFontFamily(e.target.value)}
               >
                 {fontArr.filter(Boolean).map(font => (
                   <MenuItem key={font} value={font}>
@@ -85,7 +87,7 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
                 ))}
               </Select>
             </Tooltip>
-            <ColorInput type="stroke" value={strokeColor || canvas?.options.strokeColor} changeHandler={onSetStrokeColor} />
+            <ColorInput type="stroke" value={selectedObject.fill || canvas?.options.strokeColor || "#000000"} changeHandler={onSetStrokeColor} />
             <Tooltip title="Font-size">
               <Box
                 sx={{
@@ -105,12 +107,12 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
                 }}
               >
                 <TextField
-                  defaultValue={40}
-                  onChange={e => canvas?.setTextFontSize(e.target.value)}
+                  value={fontSize || canvas.options.fontSize}
+                  onChange={e => onSetFontSize(e.target.value)}
                   sx={{
-                    width: "60px",
+                    maxWidth: "100px",
                     "& input": {
-                      paddingInline: "14px 8px"
+                      paddingInline: "14px 8px",
                     }
                   }}
                   inputProps={{
