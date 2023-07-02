@@ -39,7 +39,7 @@ export function useOpenAIFormProps(onFetchedImages: (images: ImageItem[])=> void
         onFetchedImages(resp.data.result as ImageItem[])
       } catch (error: any) {
         if (error.response) {
-          enqueueSnackbar(error.response.statusText, { variant: 'error' })
+          enqueueSnackbar(error.response.data?.error, { variant: 'error' })
         } else {
           enqueueSnackbar(error.message, { variant: 'error' })
         }

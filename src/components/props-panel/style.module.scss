@@ -1,6 +1,6 @@
 .panel {
   width: 280px;
-  height: calc(100% - 60px);
+  height: calc(100% - 60px) !important;
   position: absolute;
   right: 10px;
   left: unset;

@@ -9,10 +9,10 @@ export const categories: CategoryItem[] = [
     type: 'photo',
     name: 'Photo'
   },
-  {
-    type: 'template',
-    name: 'Template'
-  },
+  // {
+  //   type: 'template',
+  //   name: 'Template'
+  // },
   {
     type: 'shape',
     name: 'Shape'
