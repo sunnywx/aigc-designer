@@ -49,12 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
-      res.status(error.response.status).json(error.response.data);
+      res.status(error.response.status).json({error: error.response.data});
     } else {
       res.status(500).json({
-        error: {
-          message: error.message,
-        }
+        error: error.message
       });
     }
   }
