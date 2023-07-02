@@ -36,7 +36,7 @@ export default function Topbar() {
           </Grid>
           <Grid item md={4}>
             <Grid container alignItems="center" justifyContent="flex-end" gap="10px" className={styles.btns}>
-              <ActionButton icon={<AiOutlineFileAdd />} title='New design' onClick={()=> setNewFileOpen(true)}/>
+              {/*<ActionButton icon={<AiOutlineFileAdd />} title='New design' onClick={()=> setNewFileOpen(true)}/>*/}
               <ActionButton icon={'AI'} title='AI generative image' onClick={()=> setAiOpen(true)}/>
               <ActionButton icon={<FaCode />} title='View schema' onClick={()=> setSchemaOpen(true)}/>
               <ActionButton title='Preview'>

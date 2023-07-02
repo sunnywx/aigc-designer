@@ -1,9 +1,9 @@
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { Grid, TextField, Typography, Select, MenuItem } from '@mui/material'
-import { FormValues, ImageSize } from './types'
+import { Grid, TextField, Typography, Select, MenuItem, Tabs, Tab } from '@mui/material'
+import { FormValues, ImageSize, ImageItem, Model } from './types'
 import styles from './form.module.scss'
-import { ForwardedRef, forwardRef, useEffect, useState, useImperativeHandle, useRef } from 'react'
+import { ForwardedRef, forwardRef, useEffect, useState, useImperativeHandle, useRef, useMemo } from 'react'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import Loading from '@/components/loading'
@@ -15,6 +15,8 @@ import TimeCounter from './time-counter'
 import cs from 'classnames'
 import {BsCheck2Circle} from 'react-icons/bs'
 import {useEditor} from '@/editor'
+import OpenaiModel, {useOpenAIFormProps} from './openai-model'
+import SDModel, {useSDFormProps} from './sd-model'
 
 interface Props {
   onClose?: () => void;
@@ -24,59 +26,36 @@ export interface Text2ImageFormRef {
   generate: () => void
 }
 
-type ImageItem = {
-  url: string
-}
-
 function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>) {
   const {canvas}=useEditor()
   const [images, setImages] = useState<ImageItem[]>([])
   const [selectedImages, setSelectedImages]=useState<string[]>([])
   const { enqueueSnackbar } = useSnackbar()
-  const { values, errors, handleChange, handleSubmit, isSubmitting } = useFormik<FormValues>({
-    initialValues: {
-      prompt: '',
-      count: 1,
-      size: ImageSize.small
-    },
-    validationSchema: Yup.object({
-      prompt: Yup.string().required("prompt is required")
-    }),
-    validateOnChange: true,
-    validateOnBlur: true,
-    enableReinitialize: true,
-    onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true)
-      
-      try {
-        // mock images
-        // await sleep(1000)
-        // setImages(mockImages)
-        
-        const resp: any=await axios.post<{}, {result: ImageItem[]}>('/api/text2img/openai', {
-          p: values.prompt,
-          size: values.size,
-          count: values.count
-        }, {
-          timeout: 1000 * 20 // 20s
-        })
-        setImages(resp.data.result)
-      } catch (error: any) {
-        if (error.response) {
-          enqueueSnackbar(error.response.statusText, { variant: 'error' })
-        } else {
-          enqueueSnackbar(error.message, { variant: 'error' })
-        }
-      } finally {
-        setSubmitting(false)
+  const [model, setModel]=useState<Model>('openai')
+  const openaiFormProps=useOpenAIFormProps(setImages)
+  const sdFormProps=useSDFormProps(setImages)
+  const {loading, disabled, submitHandler}=useMemo<{
+    loading: boolean,
+    disabled: boolean,
+    submitHandler: ()=> void
+  }>(()=> {
+    if(model === 'openai'){
+      const {isSubmitting, errors, handleSubmit}=openaiFormProps
+      return {
+        loading: isSubmitting,
+        disabled: isSubmitting || Object.keys(errors).length > 0,
+        submitHandler: handleSubmit
       }
-      
     }
-  })
-  
-  useImperativeHandle(ref, () => ({
-    generate: () => handleSubmit(),
-  }))
+    if(model === 'sd'){
+      const {isSubmitting, errors, handleSubmit}=sdFormProps
+      return {
+        loading: isSubmitting,
+        disabled: isSubmitting || Object.keys(errors).length > 0,
+        submitHandler: handleSubmit
+      }
+    }
+  }, [model, openaiFormProps, sdFormProps])
   
   function onAddImages(){
     if(selectedImages.length === 0){
@@ -97,9 +76,9 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
       footer={(
         <div>
           <Button
-            onClick={handleSubmit as any}
-            form='aigc-form'
-            disabled={isSubmitting}
+            onClick={submitHandler}
+            disabled={disabled}
+            loading={loading}
             variant='contained'
             color='secondary'
             style={{marginRight:'8px'}}
@@ -110,7 +89,7 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
             onClick={onAddImages}
             variant='contained'
             color='primary'
-            disabled={isSubmitting || selectedImages.length === 0}
+            disabled={loading || selectedImages.length === 0}
           >
             Add image
           </Button>
@@ -118,54 +97,25 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
       )}
     >
       <div className={styles.wrap}>
-        <form className={styles.form} onSubmit={handleSubmit} id='aigc-form'>
-          <div className={styles.item}>
-            <Typography>Prompt</Typography>
-            <TextField
-              name='prompt'
-              multiline
-              variant="outlined"
-              size='small'
-              rows={4}
-              fullWidth
-              value={values.prompt}
-              onChange={handleChange}
-              placeholder='Please input prompt to generate image'
-              error={!!errors.prompt}
-              helperText={errors.prompt}
-            />
-          </div>
-          <div className={styles.item}>
-            <Typography>Count</Typography>
-            <Select
-              name='count'
-              value={values.count}
-              onChange={handleChange}
-              size='small'
-            >
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-            </Select>
-          </div>
-          <div className={styles.item}>
-            <Typography>Size</Typography>
-            <Select
-              name='size'
-              size='small'
-              value={values.size}
-              onChange={handleChange}
-            >
-              <MenuItem value={ImageSize.small}>256 x 256</MenuItem>
-              <MenuItem value={ImageSize.medium}>512 x 512</MenuItem>
-              <MenuItem value={ImageSize.large}>1028 x 1028</MenuItem>
-            </Select>
-          </div>
-        </form>
+        <div className={styles.leftPanel}>
+          <Tabs value={model} onChange={(e, tab)=> setModel(tab)} sx={{marginBottom: "10px"}}>
+            <Tab value='openai' label='OpenAI' />
+            <Tab value='sd' label='Stable Diffusion' />
+          </Tabs>
+  
+          {model === 'openai' && (
+            <OpenaiModel formProps={openaiFormProps}/>
+          )}
+  
+          {model === 'sd' && (
+            <SDModel formProps={sdFormProps}/>
+          )}
+        </div>
+       
     
         <div className={styles.result}>
-          {isSubmitting && <Loading/>}
+          {loading && <Loading/>}
+          
           {images.length > 0 && (
             <div className={styles.images}>
               {images.map(({url}, idx) => {
@@ -200,7 +150,7 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
           )}
         </div>
     
-        {isSubmitting && <TimeCounter/>}
+        {loading && <TimeCounter/>}
       </div>
     </Modal>
   );
