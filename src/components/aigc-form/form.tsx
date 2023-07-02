@@ -111,8 +111,6 @@ function Text2ImageForm({ onClose }: Props, ref: ForwardedRef<Text2ImageFormRef>
             <SDModel formProps={sdFormProps}/>
           )}
         </div>
-       
-    
         <div className={styles.result}>
           {loading && <Loading/>}
           

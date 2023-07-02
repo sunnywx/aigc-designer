@@ -1,4 +1,4 @@
-stable-diffusion(sd) text-to-img api
+stable-diffusion
 ==
 
 ## install sd on mac m1, call from local
