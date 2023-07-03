@@ -146,7 +146,7 @@ export default function PropsPanel({ canvas }: Props) {
             </div>
           </div>
         </div>
-        {canvasObjects && canvasObjects.length !== 0 && <Accordion
+        <Accordion
           sx={{ overflow: "hidden", boxShadow: "none" }}
           disableGutters
         >
@@ -159,27 +159,29 @@ export default function PropsPanel({ canvas }: Props) {
             <Typography variant='body1'>Layers</Typography>
           </AccordionSummary>
           <AccordionDetails className={classes.accordionBody}>
-            <ObjectHandlers layersOnly={true} className={classes.layerPanelObjects} />
-            <div className={classes.layerContainer}>
-              {canvasObjects.map((item: any, index: number) => (
-                <Button
-                  key={index}
-                  id={item.name}
-                  className={classes.layerItem}
-                  onClick={() => {
-                    canvas.canvas.setActiveObject(item)
-                    canvas.canvas.renderAll()
-                  }}
-                >
-                  <div>
-                    {getIcon(item)}
-                  </div>
-                  <Typography variant='caption'>{item.type === "icon" ? item.name.split("-")[0] : item.type}</Typography>
-                </Button>
-              ))}
-            </div>
+            {(canvasObjects && canvasObjects.length !== 0) ? <>
+              <ObjectHandlers layersOnly={true} className={classes.layerPanelObjects} />
+              <div className={classes.layerContainer}>
+                {canvasObjects.map((item: any, index: number) => (
+                  <Button
+                    key={index}
+                    id={item.name}
+                    className={classes.layerItem}
+                    onClick={() => {
+                      canvas.canvas.setActiveObject(item)
+                      canvas.canvas.renderAll()
+                    }}
+                  >
+                    <div>
+                      {getIcon(item)}
+                    </div>
+                    <Typography variant='caption'>{item.type === "icon" ? item.name.split("-")[0] : item.type}</Typography>
+                  </Button>
+                ))}
+              </div>
+            </>: <Typography color="var(--gray-400)" fontStyle="italic">No active objects...</Typography>}
           </AccordionDetails>
-        </Accordion>}
+        </Accordion>
       </div>
     </Panel>
   );
