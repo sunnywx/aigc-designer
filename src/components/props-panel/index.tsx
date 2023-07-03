@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react"
 import { Canvas, useEditor } from '@/editor'
 import styles from './style.module.scss'
-import { Button, Typography, Tabs, Tab } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button,  TextField, Typography } from "@mui/material";
 import Panel from '@/components/panel'
 import {
   FaHashtag,
@@ -11,10 +12,12 @@ import { TbLetterT } from 'react-icons/tb';
 import { makeStyles } from '@mui/styles';
 import cs from 'classnames'
 import { BsFillCircleFill, BsFillTriangleFill } from 'react-icons/bs';
-import { BiArrowToBottom, BiArrowToTop, BiChevronsDown, BiChevronsUp, BiSolidRectangle } from 'react-icons/bi';
-import { MdInsertPhoto, MdOutlineDeleteOutline } from 'react-icons/md';
+import { BiSolidRectangle } from 'react-icons/bi';
+import { MdInsertPhoto, MdExpandMore } from 'react-icons/md';
 import { TfiLayoutPlaceholder } from 'react-icons/tfi';
-import { useState } from "react";
+import React from "react"
+import ObjectHandlers from '@/editor/object-handlers';
+import { ColorInput } from '../ColorInput';
 
 interface Props {
   canvas: Canvas;
@@ -23,7 +26,10 @@ interface Props {
 export default function PropsPanel({ canvas }: Props) {
   const classes = useStyles();
   const { canvasState } = useEditor()
-  const { canvasObjects, selectedObject } = useEditor();
+  const { canvasObjects } = useEditor();
+  const [bgColor, setBgColor] = useState('#ffffff');
+  const [pageWidth, setPageWidth] = useState(600)
+  const [pageHeight, setPageHeight] = useState(650)
   const [tab, setTab]=useState<'layer' | 'page'>('layer')
   
   const getIcon = (item: { type: string, name: string }) => {
@@ -48,6 +54,16 @@ export default function PropsPanel({ canvas }: Props) {
         return <TfiLayoutPlaceholder/>
     }
   }
+
+  const onSetBackgroundColor = (color: string) => {
+    setBgColor(color)
+    canvas?.setBackgroundColor(color)
+  }
+
+  useEffect(() => {
+    canvas?.setCanvasDimensions(pageWidth, pageHeight)
+  }, [pageWidth, pageHeight])
+  
   
   return (
     <Panel
@@ -58,47 +74,114 @@ export default function PropsPanel({ canvas }: Props) {
       visible
     >
       <div className={styles.panelContent}>
-        <Tabs value={tab} onChange={(e, val)=> setTab(val)}>
-          <Tab value='layer' label='Layer' />
-          <Tab value='page' label='Page' />
-        </Tabs>
-        
-        {tab === 'layer' && (
-          <>
-            {canvasObjects && canvasObjects.length > 0 ? (
-                <div className={classes.layerContainer}>
-                  {canvasObjects.map((item: any, index: number) => (
-                    <Button
-                      key={index}
-                      id={item.name}
-                      className={classes.layerItem}
-                      onClick={() => {
-                        canvas.canvas.setActiveObject(item)
-                        canvas.canvas.renderAll()
-                      }}
-                    >
-                      <div>
-                        {getIcon(item)}
-                      </div>
-                      <Typography variant='caption'>
-                        {item.type === "icon" ? item.name.split("-")[0] : item.type}
-                      </Typography>
-                    </Button>
-                  ))}
-                </div>
-            ) : (
-              <div>
-                No active object
-              </div>
-            )}
-          </>
-        )}
-  
-        {tab === 'page' && (
-          <div>
-            todo: page setting
+        <div className={classes.pageEditorContainer}>
+          <Typography variant='body1'>Page</Typography>
+          <div className={classes.bgSelectorContainer}>
+            <Typography variant='caption'>Background-color:</Typography>
+            <ColorInput type="stroke" value={bgColor || canvas?.options.backgroundColor} changeHandler={onSetBackgroundColor} />
           </div>
-        )}
+          {/* <div>
+            <Typography variant='caption'>Dimension:</Typography>
+            <div className={classes.dimensionsContainer}>
+              <Box
+                sx={{
+                  display: "flex",
+                  maxHeight: "30px",
+                  alignItems: "center",
+                  position: "relative",
+                  "& .MuiInputBase-root": {
+                    maxHeight: "30px",
+                  },
+                  "& > p": {
+                    width: "max-content",
+                    display: "grid",
+                    placeItems: "center",
+                  },
+                }}
+              >
+                <Typography variant='caption' mr="4px">X:</Typography>
+                <TextField
+                  defaultValue={canvas.options.width}
+                  onChange={e => setPageWidth(+e.target.value)}
+                  sx={{
+                    "& input": {
+                      paddingInline: "14px 8px",
+                    }
+                  }}
+                  inputProps={{
+                    type: "number",
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  maxHeight: "30px",
+                  alignItems: "center",
+                  position: "relative",
+                  "& .MuiInputBase-root": {
+                    maxHeight: "30px",
+                  },
+                  "& > p": {
+                    width: "max-content",
+                    display: "grid",
+                    placeItems: "center",
+                  },
+                }}
+              >
+                <Typography variant='caption' mr="4px">Y:</Typography>
+                <TextField
+                  defaultValue={canvas.options.height}
+                  onChange={e => setPageHeight(+e.target.value)}
+                  sx={{
+                    "& input": {
+                      paddingInline: "14px 8px",
+                    }
+                  }}
+                  inputProps={{
+                    type: "number",
+                  }}
+                />
+              </Box>
+            </div>
+          </div> */}
+        </div>
+        <Accordion
+          sx={{ overflow: "hidden", boxShadow: "none" }}
+          disableGutters
+        >
+          <AccordionSummary
+            expandIcon={<MdExpandMore size={24} />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            className={classes.accordionHeader}
+          >
+            <Typography variant='body1'>Layers</Typography>
+          </AccordionSummary>
+          <AccordionDetails className={classes.accordionBody}>
+            {(canvasObjects && canvasObjects.length !== 0) ? <>
+              <ObjectHandlers layersOnly={true} className={classes.layerPanelObjects} />
+              <div className={classes.layerContainer}>
+                {canvasObjects.map((item: any, index: number) => (
+                  <Button
+                    key={index}
+                    id={item.name}
+                    className={classes.layerItem}
+                    onClick={() => {
+                      canvas.canvas.setActiveObject(item)
+                      canvas.canvas.renderAll()
+                    }}
+                  >
+                    <div>
+                      {getIcon(item)}
+                    </div>
+                    <Typography variant='caption'>{item.type === "icon" ? item.name.split("-")[0] : item.type}</Typography>
+                  </Button>
+                ))}
+              </div>
+            </>: <Typography color="var(--gray-400)" fontStyle="italic">No active objects...</Typography>}
+          </AccordionDetails>
+        </Accordion>
       </div>
     </Panel>
   );
@@ -109,9 +192,13 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flex: 1,
     maxHeight: "520px",
+    marginTop: "10px",
     flexDirection: "column-reverse",
     rowGap: "5px",
     overflowY: "auto"
+  },
+  pageEditorContainer: {
+    marginBottom: "10px"
   },
   layerItem: {
     display: "flex",
@@ -135,5 +222,28 @@ const useStyles = makeStyles(() => ({
     position: "static",
     transform: "none",
     width: "100%"
+  },
+  accordionHeader: {
+    paddingInline: 0,
+    paddingBlock: 0,
+    "& .Mui-expanded": {
+      paddingBlock: 0
+
+    }
+  },
+  accordionBody: {
+    padding: 0,
+  },
+  bgSelectorContainer: {
+    display: "flex",
+    alignItems: "center",
+    columnGap: "10px",
+    marginTop: "10px"
+  },
+  dimensionsContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    columnGap: "10px",
+    marginTop: "10px"
   }
 }))

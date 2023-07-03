@@ -54,7 +54,7 @@ export default function Editor({
   useEffect(() => {
     const canvas = new Canvas(canvasEl.current!, {
       getSelectedObject,
-      getCanvasObjects
+      getCanvasObjects,
     })
     setCanvas(canvas);
     

@@ -20,6 +20,8 @@ export interface CanvasOptions extends fabric.ICanvasOptions {
   zoomStep?: number;
   minZoom?: number;
   maxZoom?: number;
+  height?: number;
+  width?: number;
   getSelectedObject: (obj: any) => void;
   getCanvasObjects: (objects: any) => void;
 }
@@ -49,14 +51,14 @@ export default class Canvas {
       throw Error('Unable to initialize canvas element')
     }
     this.ctx = this.el.getContext('2d')
-    this.lastDimension={
-      width: 600,
-      height: 650,
-    }
+    // this.lastDimension={
+    //   width: 600,
+    //   height: 650,
+    // }
     // @ts-ignore
     this.options=_.defaults(this.options, options, {
-      ...this.lastDimension,
-      backgroundColor: '#f5f5f5',
+      // ...this.lastDimension,
+      backgroundColor: '#ffffff',
       fontColor: "#000000",
       fillColor: '#143ab8',
       strokeColor: '#000000',
@@ -67,6 +69,8 @@ export default class Canvas {
       zoomStep: 0.2,
       minZoom: 0.2,
       maxZoom: 2,
+      height: 650,
+      width: 600,
     } as Partial<CanvasOptions>)
     
     this.canvas=new fabric.Canvas(this.el,
@@ -82,6 +86,15 @@ export default class Canvas {
         })
       }
     })
+  }
+
+  setBackgroundColor(color:string) {
+    this.canvas.setBackgroundColor(color, this.canvas.renderAll.bind(this.canvas))
+  }
+  
+  setCanvasDimensions(x: number, y: number) {
+    // The second argument { backstoreOnly: true } is optional and can be used to specify whether to resize only the canvas display or the canvas backstore as well. If you set it to true, only the display will be resized, while keeping the backstore dimensions intact.
+    this.canvas.setDimensions({ width: x, height: y }, { backstoreOnly: true });
   }
   
   setOption(key: keyof CanvasOptions | Partial<CanvasOptions>, val?: ValueOf<CanvasOptions>) {
@@ -495,7 +508,7 @@ export default class Canvas {
     this.canvas.requestRenderAll()
   }
 
-  setTextFontSize(fontSize: string) {
+  setTextFontSize(fontSize: number) {
     this.setOption('fontSize', fontSize)
     this.canvas.getActiveObjects().forEach((object) => {
       object.set({ fontSize: fontSize })

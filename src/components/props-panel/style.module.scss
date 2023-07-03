@@ -10,6 +10,7 @@
   flex-direction: column;
   row-gap: 10px;
 
+
   &.preview {
     visibility: hidden;
     transition: none;
@@ -18,9 +19,6 @@
   .panelContent {
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
-    max-height: 100%;
-    overflow-y: auto;
     & .generalInput {
       padding-inline: 10px;
       border-radius: 4px;
@@ -52,6 +50,5 @@
   width: 100%;
   & .MuiSelect-select {
     max-height: 30px;
-    border: 1px solid red;
   }
 }
