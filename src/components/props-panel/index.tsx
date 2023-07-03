@@ -80,7 +80,7 @@ export default function PropsPanel({ canvas }: Props) {
             <Typography variant='caption'>Background-color:</Typography>
             <ColorInput type="stroke" value={bgColor || canvas?.options.backgroundColor} changeHandler={onSetBackgroundColor} />
           </div>
-          <div>
+          {/* <div>
             <Typography variant='caption'>Dimension:</Typography>
             <div className={classes.dimensionsContainer}>
               <Box
@@ -144,7 +144,7 @@ export default function PropsPanel({ canvas }: Props) {
                 />
               </Box>
             </div>
-          </div>
+          </div> */}
         </div>
         <Accordion
           sx={{ overflow: "hidden", boxShadow: "none" }}
