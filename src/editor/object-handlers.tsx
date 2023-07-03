@@ -40,7 +40,7 @@ export default function ObjectHandlers({className, layersOnly=false}: Props) {
     canvas?.setTextFontSize(size)
   }
 
-  const onSetFontFamily = (font: number) => {
+  const onSetFontFamily = (font: string) => {
     setFontFamily(font)
     canvas?.setTextFontFamily(font)
   }
